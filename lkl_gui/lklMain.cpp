@@ -23,6 +23,7 @@ int ZaidejoListID;
 
 wxString BeTarpu(wxString nice);
 string BeEilutesLuzio(string nice);
+wxString SSuVarnelePakeitimas(wxString nice);
 
 
 lklMain::lklMain() : wxFrame(nullptr, wxID_ANY, L"Lietuvos krep\u0161inio lygos informacin\u0117 sistema", wxPoint(30, 30), wxSize(800, 700))
@@ -172,6 +173,7 @@ lklMain::lklMain() : wxFrame(nullptr, wxID_ANY, L"Lietuvos krep\u0161inio lygos 
 
 	wxString wxKomanda;
 
+	//cia i wxChoice surasau krepsinio komandas, kurias galesiu rinktis
 	for (int i = 0; i < Komanda.getPavadinimasSize(); i++)
 	{
 		wxKomanda = wxString::FromUTF8(VisosKomandos[i].getPavadinimas());
@@ -239,7 +241,7 @@ ZaidKomentaras::ZaidKomentaras() : wxFrame(nullptr, wxID_ANY, L"Komentaras apie 
 		VisosKomandos[i].setZaidejaiSk(Komanda.getKomandosZaidejaiSize(i));
 	}
 
-
+	
 
 
 	//konvertuoju i wxString kad programa suprastu lietuviskus simbolius
@@ -456,13 +458,15 @@ void ZaidKomentaras::OnZaidejasClicked(wxCommandEvent &evt)
 void ZaidKomentaras::OnPridetiClicked(wxCommandEvent &evt)
 {
 	ofstream fr("Komentarai.txt", ios::app);
-
+	
 	wxString ivestas;
 	ivestas = m_PridetiCtrl->GetValue();
 
-	fr << BeTarpu(stringZaidejas) << '|' << ivestas << " |\n";
+	fr << BeTarpu(stringZaidejas).ToUTF8() << '|' << ivestas << " |\n";
 
 	fr.close();
+	m_Prideti->Enable(false);
+
 	evt.Skip();
 }
 void ZaidKomentaras::OnRedaguotiClicked(wxCommandEvent &evt)
@@ -486,18 +490,18 @@ void ZaidKomentaras::OnRedaguotiClicked(wxCommandEvent &evt)
 	for (int i = 0; i < eilsk; i++)
 	{
 		getline(fd, tempeilute2, '|');
-		if (wxString::FromUTF8(BeEilutesLuzio(tempeilute2)) == BeTarpu(stringZaidejas))
+		if (BeEilutesLuzio(tempeilute2) == BeTarpu(stringZaidejas).ToUTF8())
 		{
 			getline(fd, tempeilute2, '|');
 			fr << neweilute;
 		}
-		else if (wxString::FromUTF8(BeEilutesLuzio(tempeilute2)) != BeTarpu(stringZaidejas))
+		else if (BeEilutesLuzio(tempeilute2) != BeTarpu(stringZaidejas).ToUTF8())
 		{
-			fr << wxString::FromUTF8(BeEilutesLuzio(tempeilute2)) << '|';
+			fr << BeEilutesLuzio(tempeilute2) << '|';
 
 			getline(fd, tempeilute2, '|');
 
-			fr << wxString::FromUTF8(BeEilutesLuzio(tempeilute2)) << "|\n";
+			fr << BeEilutesLuzio(tempeilute2) << "|\n";
 		}
 	}
 
@@ -506,6 +510,8 @@ void ZaidKomentaras::OnRedaguotiClicked(wxCommandEvent &evt)
 
 	remove("Komentarai.txt");
 	rename("Komentarai2.txt", "Komentarai.txt");
+
+	m_Redaguoti->Enable(false);
 
 	evt.Skip();
 }

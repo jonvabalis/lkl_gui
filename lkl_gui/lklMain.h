@@ -114,7 +114,7 @@ public:
 	void Skaityti(string failas, int x)
 	{
 		ifstream fd(failas);
-
+	
 		string szaidSk;
 		string nuskaitytas;
 
