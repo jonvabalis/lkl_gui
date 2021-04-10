@@ -4,11 +4,16 @@
 #include <string>
 #include <vector>
 #include <fstream>
+#include <iomanip>
 //#include <stdio.h>
 #include <cstdio>
 
 using namespace std;
 
+void EiluciuSk(string failas, int &x);
+void RungtyniuSk(string failas, int &rungtyniu_sk);
+void ID_sk(string failas, int ID, int &x, int &ID_pradzia);
+wxString BeTarpu(wxString nice);
 
 class lklMain : public wxFrame
 {
@@ -22,6 +27,9 @@ public:
 
 	wxStaticText *m_titulinisText1;
 	wxStaticText *m_titulinisText2;
+
+	wxRadioButton *m_radioKomandos;
+	wxRadioButton *m_radioVarzybos;
 
 	wxTextCtrl *m_titulinisTextCtrl;
 
@@ -53,6 +61,8 @@ public:
 
 	void OnButton1Clicked(wxCommandEvent &evt);
 	void OnButton2Clicked(wxCommandEvent &evt);
+
+	void OnRadioClicked(wxCommandEvent &evt);
 
 	wxDECLARE_EVENT_TABLE();
 };
@@ -229,6 +239,208 @@ public:
 	Komandos(string pav) //konstruktorius
 	{
 		this->Pavadinimas = pav;
+	}
+};
+class SkaitytiVarzybos
+{
+private:
+
+	vector<int> ID;
+
+	vector<string> KomandaPav1;
+	vector<string> KomandaPav2;
+
+	vector<string> Data;
+
+	vector<string> Vieta;
+
+	vector<vector<vector<string>>> Komanda1;
+	vector<vector<vector<string>>> Komanda2;
+
+public:
+	void Skaityti(string komandos, string data, string vieta, string rezultatai)
+	{
+		string nuskaitytas;
+		int eilsk, rungtyniu_sk, ID_pradzios_ind;
+
+
+		EiluciuSk(komandos, eilsk);
+		ifstream fd1(komandos);
+
+		for (int i = 0; i < eilsk; i++)
+		{
+			getline(fd1, nuskaitytas, '|');
+			ID.push_back(stoi(nuskaitytas));
+
+			getline(fd1, nuskaitytas, '|');
+			KomandaPav1.push_back(nuskaitytas);
+
+			getline(fd1, nuskaitytas, '|');
+			KomandaPav2.push_back(nuskaitytas);
+		}
+
+		fd1.close();
+
+
+		EiluciuSk(data, eilsk);
+		ifstream fd2(data);
+
+		for (int i = 0; i < eilsk; i++)
+		{
+			getline(fd2, nuskaitytas, '|');
+			getline(fd2, nuskaitytas, '|');
+			Data.push_back(nuskaitytas);
+		}
+
+		fd2.close();
+
+
+		EiluciuSk(vieta, eilsk);
+		ifstream fd3(vieta);
+
+		for (int i = 0; i < eilsk; i++)
+		{
+			getline(fd3, nuskaitytas, '|');
+			getline(fd3, nuskaitytas, '|');
+			Vieta.push_back(nuskaitytas);
+		}
+
+		fd3.close();
+
+
+		RungtyniuSk(rezultatai, rungtyniu_sk);
+		ifstream fd4(rezultatai);
+
+		for (int h = 0; h < rungtyniu_sk; h++)
+		{
+			vector<vector<string>> Komanda1Info;
+			vector<vector<string>> Komanda2Info;
+
+			ID_sk(rezultatai, ID[h], eilsk, ID_pradzios_ind);
+			for (int i = ID_pradzios_ind; i < eilsk + ID_pradzios_ind; i++)
+			{
+				string tempkomanda;
+				vector<string> ZaidejasInfo;
+
+				getline(fd4, nuskaitytas, '|');
+				getline(fd4, tempkomanda, '|');
+
+				for (int j = 0; j < 17; j++)
+				{
+					getline(fd4, nuskaitytas, '|');
+					ZaidejasInfo.push_back(nuskaitytas);
+				}
+
+				if (BeTarpu(KomandaPav1[h]) == tempkomanda)
+					Komanda1Info.push_back(ZaidejasInfo);
+				if (BeTarpu(KomandaPav2[h]) == tempkomanda)
+					Komanda2Info.push_back(ZaidejasInfo);
+			}
+
+			Komanda1.push_back(Komanda1Info);
+			Komanda2.push_back(Komanda2Info);
+		}
+
+		fd4.close();
+	};
+
+	int getID(int i) {
+		return this->ID[i];
+	};
+	string getPavadinimas1(int i) {
+		return this->KomandaPav1[i];
+	};
+	string getPavadinimas2(int i) {
+		return this->KomandaPav2[i];
+	};
+	string getData(int i) {
+		return this->Data[i];
+	};
+	string getVieta(int i) {
+		return this->Vieta[i];
+	};
+	vector<vector<string>> getKomanda1(int i) {
+		return this->Komanda1[i];
+	};
+	vector<vector<string>> getKomanda2(int i) {
+		return this->Komanda2[i];
+	};
+	int getPavadinimasSize() {
+		return this->KomandaPav1.size();
+	};
+};
+class Varzybos
+{
+private:
+
+	int ID;
+
+	string KomandaPav1;
+	string KomandaPav2;
+
+	string Data;
+
+	string Vieta;
+
+	vector<vector<string>> Komanda1;
+	vector<vector<string>> Komanda2;
+
+public:
+
+	void setID(int i) {
+		ID = i;
+	};
+	void setPavadinimas1(string pavadinimas) {
+		KomandaPav1 = pavadinimas;
+	};
+	void setPavadinimas2(string pavadinimas) {
+		KomandaPav2 = pavadinimas;
+	};
+	void setData(string data) {
+		Data = data;
+	};
+	void setVieta(string vieta) {
+		Vieta = vieta;
+	};
+	void setKomanda1(vector<vector<string>> komanda1) {
+		Komanda1 = komanda1;
+	};
+	void setKomanda2(vector<vector<string>> komanda2) {
+		Komanda2 = komanda2;
+	};
+
+	int getID() {
+		return this->ID;
+	};
+	string getPavadinimas1() {
+		return this->KomandaPav1;
+	};
+	string getPavadinimas2() {
+		return this->KomandaPav2;
+	};
+	string getData() {
+		return this->Data;
+	};
+	string getVieta() {
+		return this->Vieta;
+	};
+	string getKomandaInfo1(int j, int i) {
+		return this->Komanda1[j][i];
+	}; //zaidejas j, statsai i
+	string getKomandaInfo2(int j, int i) {
+		return this->Komanda2[j][i];
+	}; //zaidejas j, statsai i
+	int getKomandaSk1() {
+		return this->Komanda1.size();
+	};
+	int getKomandaSk2() {
+		return this->Komanda2.size();
+	};
+
+	//kad vektorius patenkintas butu
+	Varzybos(string pavadinimas1)
+	{
+		this->KomandaPav1 = pavadinimas1;
 	}
 };
 

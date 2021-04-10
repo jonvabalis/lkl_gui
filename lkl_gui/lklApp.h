@@ -11,7 +11,7 @@ public:
 	lklApp();
 	~lklApp();
 private:
-	lklMain *m_frame1 = nullptr;
+	wxWindow *m_frame1 = nullptr;
 public:
 	virtual bool OnInit();
 };

@@ -1,0 +1,9 @@
+0|Kauno „Žalgiris“|Alytaus „Dzūkija“|
+1|Utenos „Juventus“|Panevėžio „Lietkabelis“|
+2|Šiaulių „Šiauliai“|Kauno „Žalgiris“|
+3|Kauno „Žalgiris“|Šiaulių „Šiauliai“|
+4|Kėdainių „Nevėžis“|Panevėžio „Lietkabelis“|
+5|Pasvalio „Pieno Žvaigždės“|Utenos „Juventus“|
+6|Prienų „CBet“|Klaipėdos „Neptūnas“|
+7|Prienų „CBet“|Pasvalio „Pieno Žvaigždės“|
+8|Vilniaus „Rytas“|Utenos „Juventus“|

@@ -1,0 +1,9 @@
+0|„Žalgirio“ arena|
+1|Utenos sporto ir pramogų arena|
+2|Šiaulių arena|
+3|Šiaulių arena|
+4|Cido arena|
+5|Pasvalio sporto mokykla|
+6|Švyturio arena|
+7|Prienai arena|
+8|Jeep arena|
