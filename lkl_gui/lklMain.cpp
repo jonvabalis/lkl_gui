@@ -7,6 +7,7 @@
 
 
 
+
 wxBEGIN_EVENT_TABLE(lklMain, wxFrame)
 	EVT_MENU(wxID_ABOUT, OnAbout)
 	EVT_MENU(wxID_EXIT, OnQuit)
@@ -22,12 +23,18 @@ wxEND_EVENT_TABLE()
 
 int komandaID;
 int ZaidejoListID;
+int VarzybaListID;
+int VarzybaID;
+vector<int> VarzybuID;
+wxString VarzybaInfo;
+
 
 wxString BeTarpu(wxString nice);
 string BeEilutesLuzio(string nice);
 void EiluciuSk(string failas, int &x);
 void RungtyniuSk(string failas, int &rungtyniu_sk);
 void ID_sk(string failas, int ID, int &x, int &ID_pradzia);
+int Naudingumas(vector<Varzybos> VisosVarzybos, int kind, int zind, int x);
 
 
 
@@ -117,8 +124,8 @@ lklMain::lklMain() : wxFrame(nullptr, wxID_ANY, L"Lietuvos krep\u0161inio lygos 
 	SetFont(wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
 	//m_titulinisTextCtrl = new wxTextCtrl(this, wxID_ANY);// SetSize(300, -1));
 
-	m_radioKomandos = new wxRadioButton(this, 10020, L"\u017diur\u0117ti komandas", wxDefaultPosition, wxDefaultSize, wxRB_GROUP);
-	m_radioVarzybos = new wxRadioButton(this, 10021, L"\u017diur\u0117ti var\u017eybas", wxDefaultPosition, wxDefaultSize, 0);
+	m_radioKomandos = new wxRadioButton(this, 10020, L"\u017di\u016Br\u0117ti komandas", wxDefaultPosition, wxDefaultSize, wxRB_GROUP);
+	m_radioVarzybos = new wxRadioButton(this, 10021, L"\u017di\u016Br\u0117ti var\u017eybas", wxDefaultPosition, wxDefaultSize, 0);
 	m_radioKomandos->SetValue(true);
 
 	m_komandaChoice = new wxChoice(this, 10003, wxDefaultPosition, wxSize(1920, 50));
@@ -199,9 +206,7 @@ lklMain::lklMain() : wxFrame(nullptr, wxID_ANY, L"Lietuvos krep\u0161inio lygos 
 		m_komandaChoice->AppendString(wxKomanda);
 	}
 
-	
-	//ZaidejoListID = m_titulinisList->GetSelection();
-	
+
 	m_titulinisButton2->Connect(10002, wxEVT_BUTTON, wxCommandEventHandler(ZaidKomentaras::OnZaidejasClicked), nullptr, this);
 }
 
@@ -214,22 +219,14 @@ ZaidKomentaras::ZaidKomentaras() : wxFrame(nullptr, wxID_ANY, L"Komentaras apie 
 	SetBackgroundColour(wxColour(99, 255, 140));
 
 
-	//lklMain *lkl;
-
-	wxString temp = "\u017Daidejo ID: ";
+	wxString temp = L"\u017Daid\u0117jo ID: ";
 	wxString temp2 = ", o komandos ID: ";
-
 	temp << ZaidejoListID << temp2 << komandaID;
-
-
 	wxStaticText *m_txt = new wxStaticText(this, -1, temp);
-
-
 
 
 	SkaitytiKomandos Komanda;
 	vector<Komandos> VisosKomandos;
-
 
 	Komanda.Skaityti("Komandos.txt", 0);
 
@@ -276,6 +273,7 @@ ZaidKomentaras::ZaidKomentaras() : wxFrame(nullptr, wxID_ANY, L"Komentaras apie 
 	string nuskaitytas_komentaras = "ni46209ce";
 	string nuskaitytas_bkomentaras = "ecin96";
 	wxString tempZaidejas = BeTarpu(stringZaidejas);
+
 
 	while (!fd.eof())
 	{
@@ -355,6 +353,300 @@ ZaidKomentaras::ZaidKomentaras() : wxFrame(nullptr, wxID_ANY, L"Komentaras apie 
 
 }
 
+VarzybaFrame::VarzybaFrame() : wxFrame(nullptr, wxID_ANY, L"Var\u017eyb\u0173 protokolas apie krep\u0161ininkus", wxPoint(30, 30), wxSize(1400, 985))
+{
+	//ikonele
+	SetIcon(wxIcon("aaaaaaaa"));
+
+	//background spalva
+	SetBackgroundColour(wxColour(17, 209, 39));
+
+
+	wxString temp = L"Var\u017eyb\u0173 ID: ";
+	temp << VarzybaID;
+	wxStaticText *m_txt = new wxStaticText(this, -1, temp);
+
+
+	SkaitytiVarzybos Varzyba;
+	vector<Varzybos> VisosVarzybos;
+
+	Varzyba.Skaityti("VarzybuKomandos.txt", "VarzybuDatos.txt", "VarzybuVietos.txt", "VarzybuRezultatai.txt");
+
+	for (int i = 0; i < Varzyba.getPavadinimasSize(); i++)
+	{
+		//1 komandos pavadinimas
+		//VisosVarzybos[i].setPavadinimas1(Varzyba.getPavadinimas1(i));
+		VisosVarzybos.push_back(Varzybos(Varzyba.getPavadinimas1(i)));
+
+		//2komandos pavadinimas
+		VisosVarzybos[i].setPavadinimas2(Varzyba.getPavadinimas2(i));
+
+		//ID
+		VisosVarzybos[i].setID(Varzyba.getID(i));
+
+		//data
+		VisosVarzybos[i].setData(Varzyba.getData(i));
+
+		//vieta
+		VisosVarzybos[i].setVieta(Varzyba.getVieta(i));
+
+		//1 komandos zaidejai ir ju statistikos
+		VisosVarzybos[i].setKomanda1(Varzyba.getKomanda1(i));
+
+		//2 komandos zaidejai ir ju statistikos
+		VisosVarzybos[i].setKomanda2(Varzyba.getKomanda2(i));
+	}
+
+	//kad rasciau rungtyniu zaideja
+	int max_eff = Naudingumas(VisosVarzybos, VarzybaID, 0, 0), komandos_ind = 0, zaidejo_ind = 0;
+
+	for (int i = 0; i < VisosVarzybos[VarzybaID].getKomandaSk1(); i++)
+	{
+		if (max_eff < Naudingumas(VisosVarzybos, VarzybaID, i, 0))
+		{
+			max_eff = Naudingumas(VisosVarzybos, VarzybaID, i, 0);
+			komandos_ind = 0;
+			zaidejo_ind = i;
+		}
+	}
+	for (int i = 0; i < VisosVarzybos[VarzybaID].getKomandaSk2(); i++)
+	{
+		if (max_eff < Naudingumas(VisosVarzybos, VarzybaID, i, 1))
+		{
+			max_eff = Naudingumas(VisosVarzybos, VarzybaID, i, 1);
+			komandos_ind = 1;
+			zaidejo_ind = i;
+		}
+	}
+
+	//konvertuoju i wxString kad programa suprastu lietuviskus simbolius
+	stringKomanda1 = wxString::FromUTF8(VisosVarzybos[VarzybaID].getPavadinimas1());
+	stringKomanda2 = wxString::FromUTF8(VisosVarzybos[VarzybaID].getPavadinimas2());
+	stringData = wxString::FromUTF8(VisosVarzybos[VarzybaID].getData());
+	stringVieta = wxString::FromUTF8(VisosVarzybos[VarzybaID].getVieta());
+
+
+	SetFont(wxFont(20, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+	m_VarzybaInfo = new wxStaticText(this, -1, VarzybaInfo);
+
+
+	SetFont(wxFont(16, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+	m_Data = new wxStaticText(this, -1, "Data: " + stringData);
+	m_Vieta = new wxStaticText(this, -1, "Vieta: " + stringVieta);
+
+	if (komandos_ind == 0)
+	{
+		m_RungtyniuZaidejas = new wxStaticText(this, -1, L"Rungtyni\u0173 \u017eaid\u0117jas: " + wxString::FromUTF8(VisosVarzybos[VarzybaID].getKomandaInfo1(zaidejo_ind, 0)));
+
+		SetFont(wxFont(16, wxFONTFAMILY_SWISS, wxFONTSTYLE_ITALIC, wxFONTWEIGHT_NORMAL));
+		m_RungtyniuZaidejasInfo = new wxStaticText(this, -1, VisosVarzybos[VarzybaID].getKomandaInfo1(zaidejo_ind, 16) + " ta\u0161kai, " +
+			VisosVarzybos[VarzybaID].getKomandaInfo1(zaidejo_ind, 8) + " atk. kam., " +
+			VisosVarzybos[VarzybaID].getKomandaInfo1(zaidejo_ind, 9) + " rez. perd. ir " +
+			to_string(Naudingumas(VisosVarzybos, VarzybaID, zaidejo_ind, 0)) + " naud. balai");
+	}
+	if (komandos_ind == 1)
+	{
+		m_RungtyniuZaidejas = new wxStaticText(this, -1, L"Rungtyni\u0173 \u017eaid\u0117jas: " + wxString::FromUTF8(VisosVarzybos[VarzybaID].getKomandaInfo2(zaidejo_ind, 0)));
+
+		SetFont(wxFont(16, wxFONTFAMILY_SWISS, wxFONTSTYLE_ITALIC, wxFONTWEIGHT_NORMAL));
+		m_RungtyniuZaidejasInfo = new wxStaticText(this, -1, VisosVarzybos[VarzybaID].getKomandaInfo2(zaidejo_ind, 16) + " ta\u0161kai, " +
+			VisosVarzybos[VarzybaID].getKomandaInfo2(zaidejo_ind, 8) + " atk. kam., " +
+			VisosVarzybos[VarzybaID].getKomandaInfo2(zaidejo_ind, 9) + " rez. perd. ir " +
+			to_string(Naudingumas(VisosVarzybos, VarzybaID, zaidejo_ind, 1)) + " naud. balai");
+	}
+
+	/*SetFont(wxFont(16, wxFONTFAMILY_SWISS, wxFONTSTYLE_ITALIC, wxFONTWEIGHT_NORMAL));
+	m_Komentaras = new wxStaticText(this, -1, stringKomentaras);
+	m_Komentaras->Wrap(m_Komentaras->GetClientSize().x);*/
+
+	SetFont(wxFont(16, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+	m_Komanda1 = new wxStaticText(this, -1, stringKomanda1);
+	SetFont(wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+	KomandaTable1 = new wxDataViewListCtrl(this, wxID_ANY);
+
+	SetFont(wxFont(16, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+	m_Komanda2 = new wxStaticText(this, -1, stringKomanda2);
+	SetFont(wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+	KomandaTable2 = new wxDataViewListCtrl(this, wxID_ANY);
+
+
+	VarzybaSizer = new wxBoxSizer(wxVERTICAL);
+	VarzybaSizer2 = new wxBoxSizer(wxVERTICAL);
+	VarzybaSizer3 = new wxBoxSizer(wxVERTICAL);
+	VarzybaSizer4 = new wxBoxSizer(wxVERTICAL);
+
+	VarzybaSizer2->Add(m_VarzybaInfo, 0, wxEXPAND | wxLEFT | wxTOP, 30);
+	VarzybaSizer2->Add(m_Data, 0, wxEXPAND | wxLEFT, 30);
+	VarzybaSizer2->Add(m_Vieta, 1, wxEXPAND | wxLEFT, 30);
+
+	VarzybaSizer3->Add(m_RungtyniuZaidejas, 1, wxLEFT, 15);
+	VarzybaSizer3->Add(m_RungtyniuZaidejasInfo, 1, wxLEFT, 15);
+
+	VarzybaSizer4->Add(m_Komanda1, 0, wxEXPAND | wxLEFT | wxTOP, 15);
+	VarzybaSizer4->Add(KomandaTable1, 1, wxEXPAND | wxLEFT | wxRIGHT, 15);
+	VarzybaSizer4->Add(m_Komanda2, 0, wxEXPAND | wxLEFT | wxTOP, 15);
+	VarzybaSizer4->Add(KomandaTable2, 1, wxEXPAND | wxLEFT | wxRIGHT, 15);
+
+	VarzybaSizer->Add(VarzybaSizer2, 0, wxEXPAND | wxBOTTOM | wxLEFT | wxBOTTOM, 15);
+	VarzybaSizer->Add(VarzybaSizer3, 0, wxEXPAND | wxLEFT, 30);
+	VarzybaSizer->Add(VarzybaSizer4, 1, wxEXPAND | wxLEFT | wxRIGHT | wxBOTTOM, 30);
+	this->SetSizer(VarzybaSizer);
+
+
+	wxVector<wxVariant> Lentele;
+
+	KomandaTable1->AppendTextColumn(L"\u017Daid\u0117jas", wxDATAVIEW_CELL_INERT, 185);
+	KomandaTable1->AppendTextColumn(L"Minut\u0117s", wxDATAVIEW_CELL_INERT, wxCOL_WIDTH_AUTOSIZE);
+	KomandaTable1->AppendTextColumn("2PM-A", wxDATAVIEW_CELL_INERT, -1, wxALIGN_CENTER);
+	KomandaTable1->AppendTextColumn("3PM-A", wxDATAVIEW_CELL_INERT, -1, wxALIGN_CENTER);
+	KomandaTable1->AppendTextColumn("FTM-A", wxDATAVIEW_CELL_INERT, -1, wxALIGN_CENTER);
+	KomandaTable1->AppendTextColumn("REB", wxDATAVIEW_CELL_INERT, -1, wxALIGN_CENTER);
+	KomandaTable1->AppendTextColumn("AS", wxDATAVIEW_CELL_INERT, -1, wxALIGN_CENTER);
+	KomandaTable1->AppendTextColumn("ST", wxDATAVIEW_CELL_INERT, -1, wxALIGN_CENTER);
+	KomandaTable1->AppendTextColumn("TO", wxDATAVIEW_CELL_INERT, -1, wxALIGN_CENTER);
+	KomandaTable1->AppendTextColumn("BS", wxDATAVIEW_CELL_INERT, -1, wxALIGN_CENTER);
+	KomandaTable1->AppendTextColumn("RBS", wxDATAVIEW_CELL_INERT, -1, wxALIGN_CENTER);
+	KomandaTable1->AppendTextColumn("PF", wxDATAVIEW_CELL_INERT, -1, wxALIGN_CENTER);
+	KomandaTable1->AppendTextColumn("RF", wxDATAVIEW_CELL_INERT, -1, wxALIGN_CENTER);
+	KomandaTable1->AppendTextColumn("PTS", wxDATAVIEW_CELL_INERT, -1, wxALIGN_CENTER);
+	KomandaTable1->AppendTextColumn("EFF", wxDATAVIEW_CELL_INERT, -1, wxALIGN_CENTER);
+
+
+	for (int i = 0; i < VisosVarzybos[VarzybaID].getKomandaSk1(); i++)
+	{
+		Lentele.clear();
+		
+		//zaidejas
+		Lentele.push_back(wxVariant(wxString::FromUTF8(VisosVarzybos[VarzybaID].getKomandaInfo1(i, 0))));
+		//minutes
+		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo1(i, 1)));
+		//2PM-A
+		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo1(i, 2) + '-' + VisosVarzybos[VarzybaID].getKomandaInfo1(i, 3)));
+		//3PM-A
+		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo1(i, 4) + '-' + VisosVarzybos[VarzybaID].getKomandaInfo1(i, 5)));
+		//FTM-A
+		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo1(i, 6) + '-' + VisosVarzybos[VarzybaID].getKomandaInfo1(i, 7)));
+		//REB
+		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo1(i, 8)));
+		//AS
+		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo1(i, 9)));
+		//ST
+		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo1(i, 10)));
+		//TO
+		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo1(i, 11)));
+		//BS
+		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo1(i, 12)));
+		//RBS
+		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo1(i, 13)));
+		//PF
+		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo1(i, 14)));
+		//RF
+		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo1(i, 15)));
+		//PTS
+		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo1(i, 16)));
+		//EFF
+		Lentele.push_back(wxVariant(to_string(Naudingumas(VisosVarzybos, VarzybaID, i, 0))));
+
+		KomandaTable1->AppendItem(Lentele);
+	}
+
+	KomandaTable2->AppendTextColumn(L"\u017Daid\u0117jas", wxDATAVIEW_CELL_INERT, 185);
+	KomandaTable2->AppendTextColumn(L"Minut\u0117s", wxDATAVIEW_CELL_INERT, wxCOL_WIDTH_AUTOSIZE);
+	KomandaTable2->AppendTextColumn("2PM-A", wxDATAVIEW_CELL_INERT, -1, wxALIGN_CENTER);
+	KomandaTable2->AppendTextColumn("3PM-A", wxDATAVIEW_CELL_INERT, -1, wxALIGN_CENTER);
+	KomandaTable2->AppendTextColumn("FTM-A", wxDATAVIEW_CELL_INERT, -1, wxALIGN_CENTER);
+	KomandaTable2->AppendTextColumn("REB", wxDATAVIEW_CELL_INERT, -1, wxALIGN_CENTER);
+	KomandaTable2->AppendTextColumn("AS", wxDATAVIEW_CELL_INERT, -1, wxALIGN_CENTER);
+	KomandaTable2->AppendTextColumn("ST", wxDATAVIEW_CELL_INERT, -1, wxALIGN_CENTER);
+	KomandaTable2->AppendTextColumn("TO", wxDATAVIEW_CELL_INERT, -1, wxALIGN_CENTER);
+	KomandaTable2->AppendTextColumn("BS", wxDATAVIEW_CELL_INERT, -1, wxALIGN_CENTER);
+	KomandaTable2->AppendTextColumn("RBS", wxDATAVIEW_CELL_INERT, -1, wxALIGN_CENTER);
+	KomandaTable2->AppendTextColumn("PF", wxDATAVIEW_CELL_INERT, -1, wxALIGN_CENTER);
+	KomandaTable2->AppendTextColumn("RF", wxDATAVIEW_CELL_INERT, -1, wxALIGN_CENTER);
+	KomandaTable2->AppendTextColumn("PTS", wxDATAVIEW_CELL_INERT, -1, wxALIGN_CENTER);
+	KomandaTable2->AppendTextColumn("EFF", wxDATAVIEW_CELL_INERT, -1, wxALIGN_CENTER);
+
+
+	for (int i = 0; i < VisosVarzybos[VarzybaID].getKomandaSk2(); i++)
+	{
+		Lentele.clear();
+
+		//zaidejas
+		Lentele.push_back(wxVariant(wxString::FromUTF8(VisosVarzybos[VarzybaID].getKomandaInfo2(i, 0))));
+		//minutes
+		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo2(i, 1)));
+		//2PM-A
+		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo2(i, 2) + '-' + VisosVarzybos[VarzybaID].getKomandaInfo2(i, 3)));
+		//3PM-A
+		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo2(i, 4) + '-' + VisosVarzybos[VarzybaID].getKomandaInfo2(i, 5)));
+		//FTM-A
+		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo2(i, 6) + '-' + VisosVarzybos[VarzybaID].getKomandaInfo2(i, 7)));
+		//REB
+		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo2(i, 8)));
+		//AS
+		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo2(i, 9)));
+		//ST
+		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo2(i, 10)));
+		//TO
+		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo2(i, 11)));
+		//BS
+		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo2(i, 12)));
+		//RBS
+		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo2(i, 13)));
+		//PF
+		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo2(i, 14)));
+		//RF
+		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo2(i, 15)));
+		//PTS
+		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo2(i, 16)));
+		//EFF
+		Lentele.push_back(wxVariant(to_string(Naudingumas(VisosVarzybos, VarzybaID, i, 1))));
+
+		KomandaTable2->AppendItem(Lentele);
+	}
+
+
+
+	
+	/*for (int i = 0; i < 15; i++)
+		Lentele.push_back(wxVariant("row 1"));
+	KomandaTable1->AppendItem(Lentele);
+
+	Lentele.clear();
+	for (int i = 0; i < 15; i++)
+		Lentele.push_back(wxVariant("row 3"));
+	KomandaTable1->AppendItem(Lentele);*/
+
+	/*cout << "__________________________________________________\n";
+	cout << "Pirmoji komanda: " << VisosVarzybos[VarzybaID].getPavadinimas1() << endl;
+	cout << "Antroji komanda: " << VisosVarzybos[VarzybaID].getPavadinimas2() << endl;
+	cout << "Varzybu data: " << VisosVarzybos[VarzybaID].getData() << endl;
+	cout << "Varzybu vieta: " << VisosVarzybos[VarzybaID].getVieta() << endl;
+
+	for (int i = 0; i < VisosVarzybos[VarzybaID].getKomandaSk1(); i++)
+	{
+		for (int j = 0; j < 17; j++)
+		{
+			cout << VisosVarzybos[VarzybaID].getKomandaInfo1(i, j) << " ";
+		}
+		cout << '\n';
+	}
+
+	cout << "////////////////////////\n";
+
+	for (int i = 0; i < VisosVarzybos[VarzybaID].getKomandaSk2(); i++)
+	{
+		for (int j = 0; j < 17; j++)
+		{
+			cout << VisosVarzybos[VarzybaID].getKomandaInfo2(i, j) << " ";
+		}
+		cout << '\n';
+	}
+
+	cout << "__________________________________________________\n";*/
+
+}
+
 lklMain::~lklMain()
 {
 }
@@ -411,6 +703,8 @@ void lklMain::OnKomandaChoice(wxCommandEvent &evt)
 	}
 	else if (m_radioVarzybos->GetValue() == true)
 	{
+		VarzybuID.clear();
+
 		SkaitytiKomandos Komanda;
 		vector<Komandos> VisosKomandos;
 
@@ -452,7 +746,7 @@ void lklMain::OnKomandaChoice(wxCommandEvent &evt)
 			//2 komandos zaidejai ir ju statistikos
 			VisosVarzybos[i].setKomanda2(Varzyba.getKomanda2(i));
 		}
-
+		
 		for (int i = 0; i < Varzyba.getPavadinimasSize(); i++)
 		{
 			if (VisosKomandos[komandosID].getPavadinimas() == VisosVarzybos[i].getPavadinimas1())
@@ -467,7 +761,8 @@ void lklMain::OnKomandaChoice(wxCommandEvent &evt)
 				{
 					rez2 += stoi(VisosVarzybos[i].getKomandaInfo2(j, 16));
 				}
-
+				
+				VarzybuID.push_back(VisosVarzybos[i].getID());
 				m_titulinisList->AppendString(wxString::FromUTF8(VisosVarzybos[i].getPavadinimas1() + ' ' + to_string(rez1) + ':' + to_string(rez2) + ' ' + VisosVarzybos[i].getPavadinimas2()));
 			}
 
@@ -484,6 +779,7 @@ void lklMain::OnKomandaChoice(wxCommandEvent &evt)
 					rez2 += stoi(VisosVarzybos[i].getKomandaInfo2(j, 16));
 				}
 
+				VarzybuID.push_back(VisosVarzybos[i].getID());
 				m_titulinisList->AppendString(wxString::FromUTF8(VisosVarzybos[i].getPavadinimas1() + ' ' + to_string(rez1) + ':' + to_string(rez2) + ' ' + VisosVarzybos[i].getPavadinimas2()));
 			}
 		}
@@ -506,6 +802,11 @@ void lklMain::OnRadioClicked(wxCommandEvent &evt)
 
 	if (m_radioVarzybos->GetValue() == true)
 	{
+		VarzybuID.clear();
+
+		m_titulinisButton2->Disconnect(10002, wxEVT_BUTTON, wxCommandEventHandler(ZaidKomentaras::OnZaidejasClicked), nullptr, this);
+		m_titulinisButton2->Connect(10002, wxEVT_BUTTON, wxCommandEventHandler(VarzybaFrame::OnVarzybaClicked), nullptr, this);
+
 		Varzyba.Skaityti("VarzybuKomandos.txt", "VarzybuDatos.txt", "VarzybuVietos.txt", "VarzybuRezultatai.txt");
 
 		for (int i = 0; i < Varzyba.getPavadinimasSize(); i++)
@@ -532,6 +833,7 @@ void lklMain::OnRadioClicked(wxCommandEvent &evt)
 			//2 komandos zaidejai ir ju statistikos
 			VisosVarzybos[i].setKomanda2(Varzyba.getKomanda2(i));
 		}
+		
 
 		for (int i = 0; i < Varzyba.getPavadinimasSize(); i++)
 		{
@@ -547,26 +849,43 @@ void lklMain::OnRadioClicked(wxCommandEvent &evt)
 				rez2 += stoi(VisosVarzybos[i].getKomandaInfo2(j, 16));
 			}
 
-
+			VarzybuID.push_back(VisosVarzybos[i].getID());
 			m_titulinisList->AppendString(wxString::FromUTF8(VisosVarzybos[i].getPavadinimas1() + ' ' + to_string(rez1) + ':' + to_string(rez2) + ' ' + VisosVarzybos[i].getPavadinimas2()));
 		}
-
+	}
+	else if (m_radioKomandos->GetValue() == true)
+	{
+		m_titulinisButton2->Disconnect(10002, wxEVT_BUTTON, wxCommandEventHandler(VarzybaFrame::OnVarzybaClicked), nullptr, this);
+		m_titulinisButton2->Connect(10002, wxEVT_BUTTON, wxCommandEventHandler(ZaidKomentaras::OnZaidejasClicked), nullptr, this);
 	}
 
 	evt.Skip();
 }
 void lklMain::OnButton1Clicked(wxCommandEvent &evt)
 {
-	ZaidejoListID = m_titulinisList->GetSelection();
+	if (m_radioKomandos->GetValue() == true)
+	{
+		ZaidejoListID = m_titulinisList->GetSelection();
 
-	wxString temp = "GetSelection() returns: ";
-	temp << ZaidejoListID;
-	wxStaticText *m_txt = new wxStaticText(this, -1, temp);
-	//m_titulinisList->AppendString(temp);
+		wxString temp = "GetSelection() returns: ";
+		temp << ZaidejoListID;
+		wxStaticText *m_txt = new wxStaticText(this, -1, temp);
+		//m_titulinisList->AppendString(temp);
+	}
+	else if (m_radioVarzybos->GetValue() == true)
+	{
+		VarzybaListID = m_titulinisList->GetSelection();
+		VarzybaID = VarzybuID[VarzybaListID];
+		VarzybaInfo = m_titulinisList->GetString(VarzybaListID);
+
+		wxString temp = "GetString() var\u017eyboms returns: ";
+		temp << VarzybaID << ", " << VarzybaInfo;
+		wxStaticText *m_txt = new wxStaticText(this, -1, temp);
+	}
 
 	evt.Skip();
 }
-void lklMain::OnButton2Clicked(wxCommandEvent &evt)
+/*void lklMain::OnButton2Clicked(wxCommandEvent &evt)
 {
 	//m_titulinisList->Clear();
 
@@ -578,7 +897,7 @@ void lklMain::OnButton2Clicked(wxCommandEvent &evt)
 	//m_titulinisList->AppendString(temp);
 
 	evt.Skip();
-}
+}*/
 void lklMain::OnZaidejasKeistiID(wxCommandEvent &evt)
 {
 	ZaidejoListID = m_titulinisList->GetSelection();
@@ -589,6 +908,8 @@ void ZaidKomentaras::OnZaidejasClicked(wxCommandEvent &evt)
 {
 	m_frameKomentaras = new ZaidKomentaras();
 	m_frameKomentaras->Show(true);
+
+	evt.Skip();
 }
 void ZaidKomentaras::OnPridetiClicked(wxCommandEvent &evt)
 {
@@ -647,6 +968,14 @@ void ZaidKomentaras::OnRedaguotiClicked(wxCommandEvent &evt)
 	rename("Komentarai2.txt", "Komentarai.txt");
 
 	m_Redaguoti->Enable(false);
+
+	evt.Skip();
+}
+
+void VarzybaFrame::OnVarzybaClicked(wxCommandEvent &evt)
+{
+	m_frameVarzyba = new VarzybaFrame();
+	m_frameVarzyba->Show(true);
 
 	evt.Skip();
 }
@@ -762,4 +1091,41 @@ void ID_sk(string failas, int ID, int &x, int &ID_pradzia)
 	}
 
 	fdk2.close();
+}
+int Naudingumas(vector<Varzybos> VisosVarzybos, int kind, int zind, int x)
+{
+	int EFF;
+
+	if (x == 0)
+	{
+		EFF = stoi(VisosVarzybos[kind].getKomandaInfo1(zind, 16)) -
+			(stoi(VisosVarzybos[kind].getKomandaInfo1(zind, 3)) - stoi(VisosVarzybos[kind].getKomandaInfo1(zind, 2))) -
+			(stoi(VisosVarzybos[kind].getKomandaInfo1(zind, 5)) - stoi(VisosVarzybos[kind].getKomandaInfo1(zind, 4))) -
+			(stoi(VisosVarzybos[kind].getKomandaInfo1(zind, 7)) - stoi(VisosVarzybos[kind].getKomandaInfo1(zind, 6))) +
+			stoi(VisosVarzybos[kind].getKomandaInfo1(zind, 8)) +
+			stoi(VisosVarzybos[kind].getKomandaInfo1(zind, 9)) +
+			stoi(VisosVarzybos[kind].getKomandaInfo1(zind, 10)) -
+			stoi(VisosVarzybos[kind].getKomandaInfo1(zind, 11)) +
+			stoi(VisosVarzybos[kind].getKomandaInfo1(zind, 12)) -
+			stoi(VisosVarzybos[kind].getKomandaInfo1(zind, 13)) -
+			stoi(VisosVarzybos[kind].getKomandaInfo1(zind, 14)) +
+			stoi(VisosVarzybos[kind].getKomandaInfo1(zind, 15));
+	}
+	if (x == 1)
+	{
+		EFF = stoi(VisosVarzybos[kind].getKomandaInfo2(zind, 16)) -
+			(stoi(VisosVarzybos[kind].getKomandaInfo2(zind, 3)) - stoi(VisosVarzybos[kind].getKomandaInfo2(zind, 2))) -
+			(stoi(VisosVarzybos[kind].getKomandaInfo2(zind, 5)) - stoi(VisosVarzybos[kind].getKomandaInfo2(zind, 4))) -
+			(stoi(VisosVarzybos[kind].getKomandaInfo2(zind, 7)) - stoi(VisosVarzybos[kind].getKomandaInfo2(zind, 6))) +
+			stoi(VisosVarzybos[kind].getKomandaInfo2(zind, 8)) +
+			stoi(VisosVarzybos[kind].getKomandaInfo2(zind, 9)) +
+			stoi(VisosVarzybos[kind].getKomandaInfo2(zind, 10)) -
+			stoi(VisosVarzybos[kind].getKomandaInfo2(zind, 11)) +
+			stoi(VisosVarzybos[kind].getKomandaInfo2(zind, 12)) -
+			stoi(VisosVarzybos[kind].getKomandaInfo2(zind, 13)) -
+			stoi(VisosVarzybos[kind].getKomandaInfo2(zind, 14)) +
+			stoi(VisosVarzybos[kind].getKomandaInfo2(zind, 15));
+	}
+
+	return EFF;
 }

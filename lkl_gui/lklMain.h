@@ -1,6 +1,7 @@
 #pragma once
 #include "wx/wx.h"
 #include <wx/simplebook.h>
+#include <wx/dataview.h>
 #include <string>
 #include <vector>
 #include <fstream>
@@ -98,6 +99,51 @@ public:
 	void OnZaidejasClicked(wxCommandEvent &evt);
 	void OnPridetiClicked(wxCommandEvent &evt);
 	void OnRedaguotiClicked(wxCommandEvent &evt);
+
+};
+class VarzybaFrame : public wxFrame
+{
+private:
+	VarzybaFrame *m_frameVarzyba = nullptr;
+
+	wxBoxSizer *VarzybaSizer;
+	wxSizer *VarzybaSizer2;
+	wxSizer *VarzybaSizer3;
+	wxSizer *VarzybaSizer4;
+
+	wxStaticText *m_Komanda1;
+	wxString stringKomanda1;
+
+	wxStaticText *m_Komanda2;
+	wxString stringKomanda2;
+
+	wxStaticText *m_VarzybaInfo;
+	//wxString stringVarzybaInfo;
+
+	wxStaticText *m_RungtyniuZaidejas;
+	wxStaticText *m_RungtyniuZaidejasInfo;
+
+	wxStaticText *m_Data;
+	wxString stringData;
+
+	wxStaticText *m_Vieta;
+	wxString stringVieta;
+
+	wxDataViewListCtrl *KomandaTable1;
+	wxDataViewListCtrl *KomandaTable2;
+
+	//wxButton *m_Redaguoti;
+	//wxButton *m_Prideti;
+
+	//wxTextCtrl *m_RedaguotiCtrl;
+	//wxTextCtrl *m_PridetiCtrl;
+
+public:
+	VarzybaFrame();
+
+	void OnVarzybaClicked(wxCommandEvent &evt);
+	//void OnPridetiClicked(wxCommandEvent &evt);
+	//void OnRedaguotiClicked(wxCommandEvent &evt);
 
 };
 
