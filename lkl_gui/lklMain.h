@@ -8,6 +8,8 @@
 #include <iomanip>
 //#include <stdio.h>
 #include <cstdio>
+#include <sstream>
+#include <iomanip>
 
 using namespace std;
 
@@ -22,9 +24,6 @@ public:
 	lklMain();
 	~lklMain();
 
-
-	//int ZaidejoListID;
-	//int *pointeris = &ZaidejoListID;
 
 	wxStaticText *m_titulinisText1;
 	wxStaticText *m_titulinisText2;
@@ -43,25 +42,14 @@ public:
 
 
 
-	/*wxButton *m_btn1 = nullptr;
-	wxTextCtrl *m_txt1 = nullptr;
-	wxListBox *m_list1 = nullptr;
-
-	void OnButtonClicked(wxCommandEvent &evt);*/
-
-
 	void OnQuit(wxCommandEvent &event);
 	void OnAbout(wxCommandEvent& event);
-
-
-	void OnTitulinisButton1Clicked(wxCommandEvent &evt);
 
 
 	void OnKomandaChoice(wxCommandEvent &evt);
 	void OnZaidejasKeistiID(wxCommandEvent &evt);
 
 	void OnButton1Clicked(wxCommandEvent &evt);
-	void OnButton2Clicked(wxCommandEvent &evt);
 
 	void OnRadioClicked(wxCommandEvent &evt);
 
@@ -86,6 +74,8 @@ private:
 
 	wxStaticText *m_Komentaras;
 	wxString stringKomentaras;
+
+	wxDataViewListCtrl *StatistikaTable;
 
 	wxButton *m_Redaguoti;
 	wxButton *m_Prideti;
@@ -159,12 +149,12 @@ public:
 class SkaitytiKomandos
 {
 private:
+
 	vector<string> PavadinimaiTemp;
 	vector<string> TreneriaiTemp;
 	vector<vector<string>> ZaidejaiTemp;
-	//string ZaidejaiTemp[maxz][maxk]; // padaryti kad skaitytu vektoriun 222 eiluteje // skaito, nice
 	vector<int> zaidSk;
-
+	vector<int> ID;
 
 public:
 	void Skaityti(string failas, int x)
@@ -178,50 +168,54 @@ public:
 		if (x == 0) // kai x == 0, nuskaitomos komandos
 		{
 			int i = 0;
+			int eilsk;
+			EiluciuSk(failas, eilsk);
 
-			while (!fd.eof())
+			for (i; i < eilsk; i++)
 			{
-				getline(fd, nuskaitytas);
+				getline(fd, nuskaitytas, '|');
+				ID.push_back(stoi(nuskaitytas));
 
+				getline(fd, nuskaitytas, '|');
 				PavadinimaiTemp.push_back(nuskaitytas);
-
-				i++;
 			}
 		}
 		if (x == 1) // kai x == 1, nuskaitomi treneriai 
 		{
 			int i = 0;
+			int eilsk;
+			EiluciuSk(failas, eilsk);
 
-			while (!fd.eof())
+			for (i; i < eilsk; i++)
 			{
-				getline(fd, nuskaitytas);
+				getline(fd, nuskaitytas, '|');
 
+				getline(fd, nuskaitytas, '|');
 				TreneriaiTemp.push_back(nuskaitytas);
-
-				i++;
 			}
 		}
 		if (x == 2) // kai x == 2, nuskaitomi zaidejai
 		{
 			int i = 0;
+			int eilsk;
+			EiluciuSk(failas, eilsk);
 
-			while (!fd.eof())
+			for (i; i < eilsk; i++)
 			{
-				getline(fd, szaidSk, ',');
+				getline(fd, nuskaitytas, '|');
+				getline(fd, szaidSk, '|');
 				zaidSk.push_back(stoi(szaidSk)); // kad butu int, o ne string tipo
 
 				vector<string> Nice;
 
 				for (int j = 0; j < zaidSk[i]; j++)
 				{
-					getline(fd, nuskaitytas, ','); // padaryti kad skaitytu vektoriun
+					getline(fd, nuskaitytas, '|'); // padaryti kad skaitytu vektoriun
 
 					Nice.push_back(nuskaitytas);
 				}
 				ZaidejaiTemp.push_back(Nice);
 				fd.ignore(80, '\n');
-
-				i++;
 			}
 		}
 
@@ -243,6 +237,9 @@ public:
 	int getKomandosZaidejaiSize(int i) {
 		return zaidSk[i];
 	};
+	int getID(int i) {
+		return this->ID[i];
+	};
 };
 
 class Komandos
@@ -252,6 +249,7 @@ private:
 	vector<string> Zaidejai;
 	string Pavadinimas;
 	int zaidSk;
+	int ID;
 
 public:
 	void Spausdinti();
@@ -268,6 +266,9 @@ public:
 	void setZaidejaiSk(int sk) {
 		zaidSk = sk;
 	};
+	void setID(int i) {
+		ID = i;
+	};
 
 	string getPavadinimas() {
 		return this->Pavadinimas;
@@ -281,6 +282,10 @@ public:
 	int getZaidejaiSk() {
 		return this->zaidSk;
 	};
+	int getID() {
+		return this->ID;
+	};
+
 
 	Komandos(string pav) //konstruktorius
 	{
