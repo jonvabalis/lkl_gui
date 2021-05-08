@@ -6,7 +6,6 @@
 #include <vector>
 #include <fstream>
 #include <iomanip>
-//#include <stdio.h>
 #include <cstdio>
 #include <sstream>
 #include <iomanip>
@@ -20,10 +19,7 @@ wxString BeTarpu(wxString nice);
 
 class lklMain : public wxFrame
 {
-public:
-	lklMain();
-	~lklMain();
-
+private:
 
 	wxStaticText *m_titulinisText1;
 	wxStaticText *m_titulinisText2;
@@ -37,14 +33,14 @@ public:
 
 	wxListBox *m_titulinisList;
 
-	wxButton *m_titulinisButton1;
+	//wxButton *m_titulinisButton1;
 	wxButton *m_titulinisButton2;
 
-
+public:
+	lklMain();
 
 	void OnQuit(wxCommandEvent &event);
 	void OnAbout(wxCommandEvent& event);
-
 
 	void OnKomandaChoice(wxCommandEvent &evt);
 	void OnZaidejasKeistiID(wxCommandEvent &evt);
@@ -58,6 +54,7 @@ public:
 class ZaidKomentaras : public wxFrame
 {
 private:
+
 	ZaidKomentaras *m_frameKomentaras = nullptr;
 
 	wxBoxSizer *Komentaras;
@@ -89,7 +86,6 @@ public:
 	void OnZaidejasClicked(wxCommandEvent &evt);
 	void OnPridetiClicked(wxCommandEvent &evt);
 	void OnRedaguotiClicked(wxCommandEvent &evt);
-
 };
 class VarzybaFrame : public wxFrame
 {
@@ -136,9 +132,151 @@ public:
 	//void OnRedaguotiClicked(wxCommandEvent &evt);
 
 };
+class IterptiKomandas : public wxFrame
+{
+private:
+	IterptiKomandas *m_frameIterptiKomandas = nullptr;
 
+	wxBoxSizer *KomandaSizer;
+	wxBoxSizer *KomandaSizerText;
+	wxBoxSizer *KomandaSizerInfo;
 
+	wxStaticText *m_mainText1;
 
+	wxTextCtrl *m_IterptiCtrl;
+
+	wxButton *m_Iterpti;
+
+public:
+	IterptiKomandas();
+
+	void OnIterptiKomandas(wxCommandEvent &evt);
+	void OnIterptiClicked(wxCommandEvent &evt);
+};
+class IterptiZaidejus : public wxFrame
+{
+private:
+	IterptiZaidejus *m_frameIterptiZaidejus = nullptr;
+
+	wxBoxSizer *ZaidejaiSizer;
+	wxBoxSizer *ZaidejaiSizerText;
+	wxBoxSizer *ZaidejaiSizerInfo;
+
+	wxChoice *m_komandaChoice;
+
+	wxStaticText *m_mainText1;
+	wxStaticText *m_mainText2;
+
+	wxTextCtrl *m_IterptiCtrl;
+
+	wxButton *m_Iterpti;
+
+public:
+	IterptiZaidejus();
+
+	void OnIterptiZaidejus(wxCommandEvent &evt);
+	void OnIterptiClicked(wxCommandEvent &evt);
+};
+class IterptiVarzybas : public wxFrame
+{
+private:
+	IterptiVarzybas *m_frameIterptiVarzybas = nullptr;
+
+	wxBoxSizer *VarzybaSizer;
+	wxBoxSizer *VarzybaSizerText;
+	wxBoxSizer *VarzybaKomanda;
+	wxBoxSizer *VarzybaKomanda1;
+	wxBoxSizer *VarzybaKomanda2;
+	wxBoxSizer *VarzybaZaidejai;
+	wxBoxSizer *VarzybaZaidejai1;
+	wxBoxSizer *VarzybaZaidejai2;
+	wxBoxSizer *VarzybaSizerInfo;
+
+	wxStaticText *m_mainText1;
+	wxStaticText *m_mainKomanda1;
+	wxStaticText *m_mainKomanda2;
+
+	wxChoice *m_komanda1Choice;
+	wxChoice *m_komanda2Choice;
+
+	wxChoice *m_Zaidejai1Choice1;
+	wxChoice *m_Zaidejai1Choice2;
+	wxChoice *m_Zaidejai1Choice3;
+	wxChoice *m_Zaidejai1Choice4;
+	wxChoice *m_Zaidejai1Choice5;
+	wxChoice *m_Zaidejai1Choice6;
+	wxChoice *m_Zaidejai1Choice7;
+	wxChoice *m_Zaidejai1Choice8;
+	wxChoice *m_Zaidejai1Choice9;
+	wxChoice *m_Zaidejai1Choice10;
+	wxChoice *m_Zaidejai1Choice11;
+	wxChoice *m_Zaidejai1Choice12;
+
+	wxChoice *m_Zaidejai2Choice1;
+	wxChoice *m_Zaidejai2Choice2;
+	wxChoice *m_Zaidejai2Choice3;
+	wxChoice *m_Zaidejai2Choice4;
+	wxChoice *m_Zaidejai2Choice5;
+	wxChoice *m_Zaidejai2Choice6;
+	wxChoice *m_Zaidejai2Choice7;
+	wxChoice *m_Zaidejai2Choice8;
+	wxChoice *m_Zaidejai2Choice9;
+	wxChoice *m_Zaidejai2Choice10;
+	wxChoice *m_Zaidejai2Choice11;
+	wxChoice *m_Zaidejai2Choice12;
+
+	wxTextCtrl *m_IterptiCtrl;
+
+	wxButton *m_Iterpti;
+
+public:
+	IterptiVarzybas();
+
+	void OnIterptiVarzybas(wxCommandEvent &evt);
+	void OnIterptiClicked(wxCommandEvent &evt);
+};
+
+class PasalintiKomandas : public wxFrame
+{
+private:
+	PasalintiKomandas *m_framePasalintiKomandas = nullptr;
+
+public:
+	PasalintiKomandas();
+
+	void OnPasalintiKomandas(wxCommandEvent &evt);
+};
+class PasalintiZaidejus : public wxFrame
+{
+private:
+	PasalintiZaidejus *m_framePasalintiZaidejus = nullptr;
+
+public:
+	PasalintiZaidejus();
+
+	void OnPasalintiZaidejus(wxCommandEvent &evt);
+};
+/*class PasalintiVarzybas : public wxFrame
+{
+private:
+	PasalintiVarzybas *m_framePasalintiVarzybas = nullptr;
+
+public:
+	PasalintiVarzybas();
+
+	void OnPasalintiVarzybas(wxCommandEvent &evt);
+};*/
+
+class RedaguotiKomandas : public wxFrame
+{
+private:
+	RedaguotiKomandas *m_frameRedaguotiKomandas = nullptr;
+
+public:
+	RedaguotiKomandas();
+
+	void OnRedaguotiKomandas(wxCommandEvent &evt);
+};
 
 
 //--------------------------------------------------------------------
@@ -494,47 +632,3 @@ public:
 		this->KomandaPav1 = pavadinimas1;
 	}
 };
-
-
-/*class lklMainOnButton1 : public wxFrame
-{
-public:
-	lklMainOnButton1();
-	~lklMainOnButton1();
-};*/
-
-/*
-void Nuskaitymas(SkaitytiKomandos &Komanda, Komandos &VisosKomandos)
-{
-
-	Komanda.Skaityti("Komandos.txt", 0);
-
-	for (int i = 0; i < Komanda.getPavadinimasSize(); i++)
-	{
-		VisosKomandos.push_back(Komandos(Komanda.getPavadinimas(i)));
-
-	}
-
-
-	Komanda.Skaityti("Treneriai.txt", 1);
-
-	for (int i = 0; i < Komanda.getPavadinimasSize(); i++)
-	{
-		VisosKomandos[i].setTreneris(Komanda.getTreneris(i));
-	}
-
-
-	Komanda.Skaityti("Zaidejai.txt", 2);
-
-	for (int i = 0; i < Komanda.getPavadinimasSize(); i++)
-	{
-		for (int j = 0; j < Komanda.getKomandosZaidejaiSize(i); j++)
-		{
-			// kazkodel apsikeite vietom del dvimacio vektorio nuskaitymo 227-229
-			VisosKomandos[i].setZaidejai(Komanda.getZaidejai(i, j));
-		}
-
-		VisosKomandos[i].setZaidejaiSk(Komanda.getKomandosZaidejaiSize(i));
-	}
-}
-*/

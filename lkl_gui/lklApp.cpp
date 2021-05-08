@@ -1,16 +1,7 @@
 #include "lklApp.h"
 
+
 wxIMPLEMENT_APP(lklApp);
-
-
-lklApp::lklApp()
-{
-}
-
-
-lklApp::~lklApp()
-{
-}
 
 
 bool lklApp::OnInit()
@@ -28,10 +19,13 @@ bool lklApp::OnInit()
 	_setmode(_fileno(stdout), _O_WTEXT);*/
 
 
-
 	m_frame1 = new lklMain();
 	m_frame1->Show(true);
 
 	
 	return true;
+}
+
+lklApp::lklApp()
+{
 }

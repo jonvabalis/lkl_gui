@@ -12,7 +12,7 @@ wxBEGIN_EVENT_TABLE(lklMain, wxFrame)
 	EVT_MENU(wxID_ABOUT, OnAbout)
 	EVT_MENU(wxID_EXIT, OnQuit)
 	EVT_CHOICE(10003, OnKomandaChoice)
-	EVT_BUTTON(10001, OnButton1Clicked)
+	EVT_LISTBOX(10004, OnButton1Clicked)
 	EVT_RADIOBUTTON(10020, OnRadioClicked)
 	EVT_RADIOBUTTON(10021, OnRadioClicked)
 wxEND_EVENT_TABLE()
@@ -20,6 +20,8 @@ wxEND_EVENT_TABLE()
 //EVT_BUTTON(10001, OnButton1Clicked)
 //EVT_LISTBOX(10004, OnButton2Clicked)
 //EVT_BUTTON(10002, OnButton2Clicked)
+//EVT_BUTTON(10001, OnButton1Clicked)
+
 
 int KomandaListID;
 int ZaidejoListID;
@@ -51,7 +53,7 @@ lklMain::lklMain() : wxFrame(nullptr, wxID_ANY, L"Lietuvos krep\u0161inio lygos 
 	SetBackgroundColour(wxColour(168, 240, 187));
 
 
-
+	
 	//------------------------------
 
 	SkaitytiKomandos Komanda;
@@ -95,24 +97,31 @@ lklMain::lklMain() : wxFrame(nullptr, wxID_ANY, L"Lietuvos krep\u0161inio lygos 
 
 	iterpimasMenu->Append(10031, wxT("&\u012eterpti komandas"),
 		wxT("\u012eterpti komandas"));
+	Connect(10031, wxEVT_MENU, wxCommandEventHandler(IterptiKomandas::OnIterptiKomandas), nullptr, this);
 	
 	iterpimasMenu->Append(10032, wxT("&\u012eterpti \u017eaid\u0117jus"),
 		wxT("\u012eterpti \u017eaid\u0117jus"));
+	Connect(10032, wxEVT_MENU, wxCommandEventHandler(IterptiZaidejus::OnIterptiZaidejus), nullptr, this);
 
 	iterpimasMenu->Append(10033, wxT("&\u012eterpti var\u017eybas"),
 		wxT("\u012eterpti var\u017eybas"));
+	Connect(10033, wxEVT_MENU, wxCommandEventHandler(IterptiVarzybas::OnIterptiVarzybas), nullptr, this);
 
 	pasalinimasMenu->Append(10041, wxT("&Pa\u0161alinti komandas"),
 		wxT("Pa\u0161alinti komandas"));
+	Connect(10041, wxEVT_MENU, wxCommandEventHandler(PasalintiKomandas::OnPasalintiKomandas), nullptr, this);
 
 	pasalinimasMenu->Append(10042, wxT("&Pa\u0161alinti \u017eaid\u0117jus"),
 		wxT("Pa\u0161alinti \u017eaid\u0117jus"));
+	Connect(10042, wxEVT_MENU, wxCommandEventHandler(PasalintiZaidejus::OnPasalintiZaidejus), nullptr, this);
 
-	pasalinimasMenu->Append(10043, wxT("&Pa\u0161alinti var\u017eybas"),
+	/*pasalinimasMenu->Append(10043, wxT("&Pa\u0161alinti var\u017eybas"),
 		wxT("Pa\u0161alinti var\u017eybas"));
+	Connect(10043, wxEVT_MENU, wxCommandEventHandler(PasalintiVarzybas::OnPasalintiVarzybas), nullptr, this);*/
 
 	redagavimasMenu->Append(10051, wxT("&Redaguoti komandas"),
 		wxT("Redaguoti komandas"));
+	Connect(10051, wxEVT_MENU, wxCommandEventHandler(RedaguotiKomandas::OnRedaguotiKomandas), nullptr, this);
 
 
 
@@ -151,7 +160,7 @@ lklMain::lklMain() : wxFrame(nullptr, wxID_ANY, L"Lietuvos krep\u0161inio lygos 
 
 	m_titulinisList = new wxListBox(this, 10004, wxDefaultPosition, wxSize(-1, 184));
 
-	m_titulinisButton1 = new wxButton(this, 10001, L"Patvirtinti pasirinkim\u0105");
+	//m_titulinisButton1 = new wxButton(this, 10001, L"Patvirtinti pasirinkim\u0105");
 	m_titulinisButton2 = new wxButton(this, 10002, L"Rodyti informacij\u0105");
 
 
@@ -204,7 +213,7 @@ lklMain::lklMain() : wxFrame(nullptr, wxID_ANY, L"Lietuvos krep\u0161inio lygos 
 	wxBoxSizer *TitulinisButtonGrid = new wxBoxSizer(wxHORIZONTAL);
 	wxSizer *TitulinisButton = new wxBoxSizer(wxVERTICAL);
 
-	TitulinisButton->Add(m_titulinisButton1, 1, wxEXPAND | wxLEFT, 300);
+	//TitulinisButton->Add(m_titulinisButton1, 1, wxEXPAND | wxLEFT, 300);
 	TitulinisButton->Add(m_titulinisButton2, 1, wxEXPAND | wxLEFT, 300);
 
 	TitulinisButtonGrid->Add(TitulinisButton, 1, wxEXPAND);// , 2, wxEXPAND | wxALL, 42);
@@ -373,7 +382,7 @@ ZaidKomentaras::ZaidKomentaras() : wxFrame(nullptr, wxID_ANY, L"Komentaras apie 
 		m_RedaguotiCtrl = new wxTextCtrl(this, 10013, stringKomentaras);
 
 		KomentarasInfo->Add(m_RedaguotiCtrl, 0, wxEXPAND | wxALL, 30);
-		KomentarasInfo->Add(m_Redaguoti, 0, wxEXPAND | wxLEFT, 15);
+		KomentarasInfo->Add(m_Redaguoti, 0, wxEXPAND | wxLEFT, 0);
 
 		m_Redaguoti->Connect(10010, wxEVT_BUTTON, wxCommandEventHandler(ZaidKomentaras::OnRedaguotiClicked), nullptr, this);
 	}
@@ -387,7 +396,7 @@ ZaidKomentaras::ZaidKomentaras() : wxFrame(nullptr, wxID_ANY, L"Komentaras apie 
 		m_PridetiCtrl->SetHint(L"Komentar\u0105 ra\u0161ykite \u010Dia");
 
 		KomentarasInfo->Add(m_PridetiCtrl, 0, wxEXPAND | wxALL, 30);
-		KomentarasInfo->Add(m_Prideti, 0, wxEXPAND | wxLEFT, 15);
+		KomentarasInfo->Add(m_Prideti, 0, wxEXPAND | wxLEFT, 0);
 
 		m_Prideti->Connect(10011, wxEVT_BUTTON, wxCommandEventHandler(ZaidKomentaras::OnPridetiClicked), nullptr, this);
 	}
@@ -458,7 +467,7 @@ ZaidKomentaras::ZaidKomentaras() : wxFrame(nullptr, wxID_ANY, L"Komentaras apie 
 		if (VisosKomandos[KomandaID].getPavadinimas() == VisosVarzybos[i].getPavadinimas2())
 		{
 			char minutes[2], sekundes[2];
-			int zind = Ind_varzybose(VisosKomandos, KomandaID, ZaidejoListID, VisosVarzybos, i); //WTF???
+			int zind = Ind_varzybose(VisosKomandos, KomandaID, ZaidejoListID, VisosVarzybos, i);
 
 			if (zind != -69)
 			{
@@ -589,7 +598,7 @@ VarzybaFrame::VarzybaFrame() : wxFrame(nullptr, wxID_ANY, L"Var\u017eyb\u0173 pr
 	SetIcon(wxIcon("aaaaaaaa"));
 
 	//background spalva
-	SetBackgroundColour(wxColour(17, 209, 39));
+	SetBackgroundColour(wxColour(68, 204, 31));
 
 
 	wxString temp = L"Var\u017eyb\u0173 ID: ";
@@ -836,9 +845,305 @@ VarzybaFrame::VarzybaFrame() : wxFrame(nullptr, wxID_ANY, L"Var\u017eyb\u0173 pr
 	}
 }
 
-lklMain::~lklMain()
+IterptiKomandas::IterptiKomandas() : wxFrame(nullptr, wxID_ANY, L"Komand\u0173 \u012fterpimas", wxPoint(30, 160), wxSize(800, 480))
 {
+	SetIcon(wxIcon("aaaaaaaa"));
+	SetBackgroundColour(wxColour(135, 245, 66));
+
+	KomandaSizer = new wxBoxSizer(wxVERTICAL);
+	KomandaSizerText = new wxBoxSizer(wxVERTICAL);
+	KomandaSizerInfo = new wxBoxSizer(wxVERTICAL);
+
+
+	SetFont(wxFont(32, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+	m_mainText1 = new wxStaticText(this, -1, L"Komand\u0173 \u012fterpimas");
+
+	SetFont(wxFont(16, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+	m_IterptiCtrl = new wxTextCtrl(this, 10070);
+	m_IterptiCtrl->SetHint(L"pvz.: Kauno \u201e\u017dalgiris\u201c");
+	m_Iterpti = new wxButton(this, 10071, L"\u012eterpti");
+
+
+	KomandaSizerText->Add(m_mainText1, 0, wxALIGN_CENTRE_HORIZONTAL);
+	KomandaSizerInfo->Add(KomandaSizerText, 0, wxEXPAND | wxBOTTOM, 69);
+	KomandaSizerInfo->Add(m_IterptiCtrl, 0, wxEXPAND | wxALL, 30);
+	KomandaSizerInfo->Add(m_Iterpti, 0, wxEXPAND | wxLEFT, 0);
+
+	KomandaSizer->Add(KomandaSizerInfo, 1, wxEXPAND | wxALL, 30);
+	this->SetSizer(KomandaSizer);
+
+	m_IterptiCtrl->Connect(10071, wxEVT_BUTTON, wxCommandEventHandler(IterptiKomandas::OnIterptiClicked), nullptr, this);
 }
+
+IterptiZaidejus::IterptiZaidejus() : wxFrame(nullptr, wxID_ANY, L"\u017daid\u0117j\u0173 \u012fterpimas", wxPoint(30, 160), wxSize(800, 480))
+{
+	SetIcon(wxIcon("aaaaaaaa"));
+	SetBackgroundColour(wxColour(135, 245, 66));
+
+
+	SkaitytiKomandos Komanda;
+	vector<Komandos> VisosKomandos;
+
+	Komanda.Skaityti("Komandos.txt", 0);
+
+	for (int i = 0; i < Komanda.getPavadinimasSize(); i++)
+		VisosKomandos.push_back(Komandos(Komanda.getPavadinimas(i)));
+
+
+	ZaidejaiSizer = new wxBoxSizer(wxVERTICAL);
+	ZaidejaiSizerText = new wxBoxSizer(wxVERTICAL);
+	ZaidejaiSizerInfo = new wxBoxSizer(wxVERTICAL);
+
+
+	SetFont(wxFont(32, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+	m_mainText1 = new wxStaticText(this, -1, L"\u017daid\u0117j\u0173 \u012fterpimas");
+	m_mainText2 = new wxStaticText(this, -1, L"Pirmiausia pasirinkite komand\u0105:");
+
+	SetFont(wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+	m_komandaChoice = new wxChoice(this, 10082, wxDefaultPosition, wxSize(1920, 50));
+
+	SetFont(wxFont(16, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+	m_IterptiCtrl = new wxTextCtrl(this, 10080);
+	m_IterptiCtrl->SetHint(L"pvz.: Brandon Davies");
+	m_Iterpti = new wxButton(this, 10081, L"\u012eterpti");
+
+
+	ZaidejaiSizerText->Add(m_mainText1, 0, wxALIGN_CENTRE_HORIZONTAL);
+	ZaidejaiSizerText->Add(m_mainText2, 0, wxALIGN_CENTRE_HORIZONTAL);
+	ZaidejaiSizerInfo->Add(ZaidejaiSizerText, 0, wxEXPAND | wxBOTTOM, 69);
+	ZaidejaiSizerInfo->Add(m_komandaChoice, 0, wxEXPAND | wxALL, 0);
+	ZaidejaiSizerInfo->Add(m_IterptiCtrl, 0, wxEXPAND | wxALL, 30);
+	ZaidejaiSizerInfo->Add(m_Iterpti, 0, wxEXPAND | wxLEFT, 0);
+
+	ZaidejaiSizer->Add(ZaidejaiSizerInfo, 1, wxEXPAND | wxALL, 30);
+	this->SetSizer(ZaidejaiSizer);
+
+
+	wxString wxKomanda;
+	KomanduID.clear();
+
+	for (int i = 0; i < Komanda.getPavadinimasSize(); i++)
+	{
+		wxKomanda = wxString::FromUTF8(VisosKomandos[i].getPavadinimas());
+
+		m_komandaChoice->AppendString(wxKomanda);
+
+		KomanduID.push_back(VisosKomandos[i].getID());
+	}
+
+	m_IterptiCtrl->Connect(10081, wxEVT_BUTTON, wxCommandEventHandler(IterptiZaidejus::OnIterptiClicked), nullptr, this);
+}
+
+IterptiVarzybas::IterptiVarzybas() : wxFrame(nullptr, wxID_ANY, L"Var\u017eyb\u0173 \u012fterpimas", wxPoint(30, 30), wxSize(1400, 985))
+{
+	SetIcon(wxIcon("aaaaaaaa"));
+	SetBackgroundColour(wxColour(135, 245, 66));
+
+
+	SkaitytiKomandos Komanda;
+	vector<Komandos> VisosKomandos;
+
+	Komanda.Skaityti("Komandos.txt", 0);
+	Komanda.Skaityti("Zaidejai.txt", 2);
+
+	for (int i = 0; i < Komanda.getPavadinimasSize(); i++)
+	{
+		VisosKomandos.push_back(Komandos(Komanda.getPavadinimas(i)));
+
+		VisosKomandos[i].setID(Komanda.getID(i));
+
+		for (int j = 0; j < Komanda.getKomandosZaidejaiSize(i); j++)
+			VisosKomandos[i].setZaidejai(Komanda.getZaidejai(i, j));
+
+		VisosKomandos[i].setZaidejaiSk(Komanda.getKomandosZaidejaiSize(i));
+	}
+
+
+	VarzybaSizer = new wxBoxSizer(wxVERTICAL);
+	VarzybaSizerText = new wxBoxSizer(wxVERTICAL);
+	VarzybaKomanda = new wxBoxSizer(wxVERTICAL);
+	VarzybaKomanda1 = new wxBoxSizer(wxHORIZONTAL);
+	VarzybaKomanda2 = new wxBoxSizer(wxHORIZONTAL);
+	VarzybaZaidejai = new wxBoxSizer(wxVERTICAL);
+	VarzybaZaidejai1 = new wxBoxSizer(wxVERTICAL);
+	VarzybaZaidejai2 = new wxBoxSizer(wxVERTICAL);
+	VarzybaSizerInfo = new wxBoxSizer(wxVERTICAL);
+
+
+	SetFont(wxFont(32, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+	m_mainText1 = new wxStaticText(this, -1, L"Var\u017eyb\u0173 \u012fterpimas");
+
+	SetFont(wxFont(16, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+	m_mainKomanda1 = new wxStaticText(this, -1, "1 komanda");
+	m_mainKomanda2 = new wxStaticText(this, -1, "2 komanda");
+
+	SetFont(wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+	m_komanda1Choice = new wxChoice(this, 10092, wxDefaultPosition, wxSize(400, 25));
+	m_komanda2Choice = new wxChoice(this, 10093, wxDefaultPosition, wxSize(400, 25));
+
+	m_Zaidejai1Choice1 = new wxChoice(this, 10901, wxDefaultPosition, wxSize(185, 25));
+	m_Zaidejai1Choice2 = new wxChoice(this, 10902, wxDefaultPosition, wxSize(185, 25));
+	m_Zaidejai1Choice3 = new wxChoice(this, 10903, wxDefaultPosition, wxSize(185, 25));
+	m_Zaidejai1Choice4 = new wxChoice(this, 10904, wxDefaultPosition, wxSize(185, 25));
+	m_Zaidejai1Choice5 = new wxChoice(this, 10905, wxDefaultPosition, wxSize(185, 25));
+	m_Zaidejai1Choice6 = new wxChoice(this, 10906, wxDefaultPosition, wxSize(185, 25));
+	m_Zaidejai1Choice7 = new wxChoice(this, 10907, wxDefaultPosition, wxSize(185, 25));
+	m_Zaidejai1Choice8 = new wxChoice(this, 10908, wxDefaultPosition, wxSize(185, 25));
+	m_Zaidejai1Choice9 = new wxChoice(this, 10909, wxDefaultPosition, wxSize(185, 25));
+	m_Zaidejai1Choice10 = new wxChoice(this, 10910, wxDefaultPosition, wxSize(185, 25));
+	m_Zaidejai1Choice11 = new wxChoice(this, 10911, wxDefaultPosition, wxSize(185, 25));
+	m_Zaidejai1Choice12 = new wxChoice(this, 10912, wxDefaultPosition, wxSize(185, 25));
+
+	m_Zaidejai2Choice1 = new wxChoice(this, 10913, wxDefaultPosition, wxSize(185, 25));
+	m_Zaidejai2Choice2 = new wxChoice(this, 10914, wxDefaultPosition, wxSize(185, 25));
+	m_Zaidejai2Choice3 = new wxChoice(this, 10915, wxDefaultPosition, wxSize(185, 25));
+	m_Zaidejai2Choice4 = new wxChoice(this, 10916, wxDefaultPosition, wxSize(185, 25));
+	m_Zaidejai2Choice5 = new wxChoice(this, 10917, wxDefaultPosition, wxSize(185, 25));
+	m_Zaidejai2Choice6 = new wxChoice(this, 10918, wxDefaultPosition, wxSize(185, 25));
+	m_Zaidejai2Choice7 = new wxChoice(this, 10919, wxDefaultPosition, wxSize(185, 25));
+	m_Zaidejai2Choice8 = new wxChoice(this, 10920, wxDefaultPosition, wxSize(185, 25));
+	m_Zaidejai2Choice9 = new wxChoice(this, 10921, wxDefaultPosition, wxSize(185, 25));;
+	m_Zaidejai2Choice10 = new wxChoice(this, 10922, wxDefaultPosition, wxSize(185, 25));
+	m_Zaidejai2Choice11 = new wxChoice(this, 10923, wxDefaultPosition, wxSize(185, 25));
+	m_Zaidejai2Choice12 = new wxChoice(this, 10924, wxDefaultPosition, wxSize(185, 25));;
+
+	SetFont(wxFont(16, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+	m_IterptiCtrl = new wxTextCtrl(this, 10090);
+	m_IterptiCtrl->SetHint(L"pvz.: Kauno \u201e\u017dalgiris\u201c");
+	m_Iterpti = new wxButton(this, 10091, L"\u012eterpti");
+
+
+	wxString wxKomanda;
+	KomanduID.clear();
+	for (int i = 0; i < Komanda.getPavadinimasSize(); i++)
+	{
+		wxKomanda = wxString::FromUTF8(VisosKomandos[i].getPavadinimas());
+
+		m_komanda1Choice->AppendString(wxKomanda);
+		m_komanda2Choice->AppendString(wxKomanda);
+
+		KomanduID.push_back(VisosKomandos[i].getID());
+	}
+
+	wxString Zaidejas;
+	for (int i = 0; i < VisosKomandos[2].getZaidejaiSk(); i++) //KomanduID[m_komanda1Choice->GetSelection()] kazkodel neveikia
+	{
+		Zaidejas = wxString::FromUTF8(VisosKomandos[2].getZaidejai(i));
+
+		m_Zaidejai1Choice1->AppendString(Zaidejas);
+		m_Zaidejai1Choice2->AppendString(Zaidejas);
+		m_Zaidejai1Choice3->AppendString(Zaidejas);
+		m_Zaidejai1Choice4->AppendString(Zaidejas);
+		m_Zaidejai1Choice5->AppendString(Zaidejas);
+		m_Zaidejai1Choice6->AppendString(Zaidejas);
+		m_Zaidejai1Choice7->AppendString(Zaidejas);
+		m_Zaidejai1Choice8->AppendString(Zaidejas);
+		m_Zaidejai1Choice9->AppendString(Zaidejas);
+		m_Zaidejai1Choice10->AppendString(Zaidejas);
+		m_Zaidejai1Choice11->AppendString(Zaidejas);
+		m_Zaidejai1Choice12->AppendString(Zaidejas);
+	}
+
+	for (int i = 0; i < VisosKomandos[2].getZaidejaiSk(); i++)
+	{
+		Zaidejas = wxString::FromUTF8(VisosKomandos[2].getZaidejai(i));
+
+		m_Zaidejai2Choice1->AppendString(Zaidejas);
+		m_Zaidejai2Choice2->AppendString(Zaidejas);
+		m_Zaidejai2Choice3->AppendString(Zaidejas);
+		m_Zaidejai2Choice4->AppendString(Zaidejas);
+		m_Zaidejai2Choice5->AppendString(Zaidejas);
+		m_Zaidejai2Choice6->AppendString(Zaidejas);
+		m_Zaidejai2Choice7->AppendString(Zaidejas);
+		m_Zaidejai2Choice8->AppendString(Zaidejas);
+		m_Zaidejai2Choice9->AppendString(Zaidejas);
+		m_Zaidejai2Choice10->AppendString(Zaidejas);
+		m_Zaidejai2Choice11->AppendString(Zaidejas);
+		m_Zaidejai2Choice12->AppendString(Zaidejas);
+	}
+	
+
+
+	VarzybaSizerText->Add(m_mainText1, 0, wxALIGN_CENTRE_HORIZONTAL);
+	VarzybaSizerInfo->Add(VarzybaSizerText, 0, wxEXPAND | wxBOTTOM, 13);
+
+
+	VarzybaKomanda1->Add(m_mainKomanda1, 0, wxEXPAND | wxLEFT, 280);
+	VarzybaKomanda1->Add(m_mainKomanda2, 0, wxEXPAND | wxLEFT, 570);
+
+	VarzybaKomanda2->Add(m_komanda1Choice, 1, wxEXPAND | wxLEFT | wxRIGHT, 100);
+	VarzybaKomanda2->Add(m_komanda2Choice, 1, wxEXPAND | wxLEFT | wxRIGHT, 100);
+
+	VarzybaKomanda->Add(VarzybaKomanda1, 0, wxEXPAND | wxALL, 0);
+	VarzybaKomanda->Add(VarzybaKomanda2, 0, wxEXPAND | wxALL, 0);
+
+	VarzybaSizerInfo->Add(VarzybaKomanda, 1, wxEXPAND | wxBOTTOM, 12);
+
+
+	VarzybaZaidejai1->Add(m_Zaidejai1Choice1, 0, wxEXPAND | wxLEFT, 30);
+	VarzybaZaidejai1->Add(m_Zaidejai1Choice2, 0, wxEXPAND | wxLEFT, 30);
+	VarzybaZaidejai1->Add(m_Zaidejai1Choice3, 0, wxEXPAND | wxLEFT, 30);
+	VarzybaZaidejai1->Add(m_Zaidejai1Choice4, 1, wxEXPAND | wxLEFT, 30);
+	VarzybaZaidejai1->Add(m_Zaidejai1Choice5, 0, wxEXPAND | wxLEFT, 30);
+	VarzybaZaidejai1->Add(m_Zaidejai1Choice6, 1, wxEXPAND | wxLEFT, 30);
+	VarzybaZaidejai1->Add(m_Zaidejai1Choice7, 0, wxEXPAND | wxLEFT, 30);
+	VarzybaZaidejai1->Add(m_Zaidejai1Choice8, 0, wxEXPAND | wxLEFT, 30);
+	VarzybaZaidejai1->Add(m_Zaidejai1Choice9, 0, wxEXPAND | wxLEFT, 30);
+	VarzybaZaidejai1->Add(m_Zaidejai1Choice10, 0, wxEXPAND | wxLEFT, 30);
+	VarzybaZaidejai1->Add(m_Zaidejai1Choice11, 0, wxEXPAND | wxLEFT, 30);
+	VarzybaZaidejai1->Add(m_Zaidejai1Choice12, 0, wxEXPAND | wxLEFT, 30);
+
+	VarzybaZaidejai2->Add(m_Zaidejai2Choice1, 1, wxEXPAND | wxLEFT, 30);
+	VarzybaZaidejai2->Add(m_Zaidejai2Choice2, 1, wxEXPAND | wxLEFT, 30);
+	VarzybaZaidejai2->Add(m_Zaidejai2Choice3, 1, wxEXPAND | wxLEFT, 30);
+	VarzybaZaidejai2->Add(m_Zaidejai2Choice4, 1, wxEXPAND | wxLEFT, 30);
+	VarzybaZaidejai2->Add(m_Zaidejai2Choice5, 1, wxEXPAND | wxLEFT, 30);
+	VarzybaZaidejai2->Add(m_Zaidejai2Choice6, 0, wxEXPAND | wxLEFT, 30);
+	VarzybaZaidejai2->Add(m_Zaidejai2Choice7, 0, wxEXPAND | wxLEFT, 30);
+	VarzybaZaidejai2->Add(m_Zaidejai2Choice8, 0, wxEXPAND | wxLEFT, 30);
+	VarzybaZaidejai2->Add(m_Zaidejai2Choice9, 0, wxEXPAND | wxLEFT, 30);
+	VarzybaZaidejai2->Add(m_Zaidejai2Choice10, 0, wxEXPAND | wxLEFT, 30);
+	VarzybaZaidejai2->Add(m_Zaidejai2Choice11, 0, wxEXPAND | wxLEFT, 30);
+	VarzybaZaidejai2->Add(m_Zaidejai2Choice12, 0, wxEXPAND | wxLEFT, 30);
+
+	VarzybaZaidejai->Add(VarzybaZaidejai1, 0, wxEXPAND | wxBOTTOM, 20);
+	VarzybaZaidejai->Add(VarzybaZaidejai2, 0, wxEXPAND | wxALL, 0);
+
+	VarzybaSizerInfo->Add(VarzybaZaidejai, 0, wxEXPAND | wxRIGHT, 1175);
+
+
+
+
+	//VarzybaSizerText->Add(m_mainText1, 0, wxALIGN_CENTRE_HORIZONTAL);
+	//VarzybaSizerInfo->Add(VarzybaSizerText, 0, wxEXPAND | wxBOTTOM, 69);
+	VarzybaSizerInfo->Add(m_IterptiCtrl, 0, wxEXPAND | wxALL, 30);
+	VarzybaSizerInfo->Add(m_Iterpti, 0, wxEXPAND | wxLEFT, 0);
+
+	VarzybaSizer->Add(VarzybaSizerInfo, 1, wxEXPAND | wxALL, 30);
+	this->SetSizer(VarzybaSizer);
+
+	m_IterptiCtrl->Connect(10091, wxEVT_BUTTON, wxCommandEventHandler(IterptiVarzybas::OnIterptiClicked), nullptr, this);
+}
+
+PasalintiKomandas::PasalintiKomandas() : wxFrame(nullptr, wxID_ANY, L"Komand\u0173 pa\u0161alinimas", wxPoint(30, 160), wxSize(800, 480))
+{
+	SetIcon(wxIcon("aaaaaaaa"));
+	SetBackgroundColour(wxColour(136, 209, 90));
+}
+
+PasalintiZaidejus::PasalintiZaidejus() : wxFrame(nullptr, wxID_ANY, L"\u017daid\u0117j\u0173 pa\u0161alinimas", wxPoint(30, 160), wxSize(800, 480))
+{
+	SetIcon(wxIcon("aaaaaaaa"));
+	SetBackgroundColour(wxColour(136, 209, 90));
+}
+
+RedaguotiKomandas::RedaguotiKomandas() : wxFrame(nullptr, wxID_ANY, L"Komand\u0173 redagavimas", wxPoint(30, 160), wxSize(800, 480))
+{
+	SetIcon(wxIcon("aaaaaaaa"));
+	SetBackgroundColour(wxColour(117, 212, 57));
+}
+
+
 
 void lklMain::OnKomandaChoice(wxCommandEvent &evt)
 {
@@ -1065,19 +1370,6 @@ void lklMain::OnButton1Clicked(wxCommandEvent &evt)
 
 	evt.Skip();
 }
-/*void lklMain::OnButton2Clicked(wxCommandEvent &evt)
-{
-	//m_titulinisList->Clear();
-
-	ZaidejoListID = m_titulinisList->GetSelection();
-
-	wxString temp = "GetSelection() returns: ";
-	temp << ZaidejoListID;
-	wxStaticText *m_txt = new wxStaticText(this, -1, temp);
-	//m_titulinisList->AppendString(temp);
-
-	evt.Skip();
-}*/
 void lklMain::OnZaidejasKeistiID(wxCommandEvent &evt)
 {
 	ZaidejoListID = m_titulinisList->GetSelection();
@@ -1164,15 +1456,78 @@ void lklMain::OnAbout(wxCommandEvent& event)
 {
 	wxString msg;
 
-	msg.Printf(wxT("Sveikas krep\u0161ininke! Sukurta naudojant %s"),
+	msg.Printf(wxT("Lietuvos krep\u0161inio lygos informacin\u0117 sistema para\u0161yta naudojant C++ ir %s"),
 		wxVERSION_STRING);
 
 	wxMessageBox(msg, wxT("Apie program\u0105"),
 		wxOK | wxICON_INFORMATION, this);
+
+	event.Skip();
 }
 void lklMain::OnQuit(wxCommandEvent &event)
-{// Destroyinam frame'a
+{
 	Close();
+
+	event.Skip();
+}
+
+void IterptiKomandas::OnIterptiKomandas(wxCommandEvent &evt)
+{
+	m_frameIterptiKomandas = new IterptiKomandas();
+	m_frameIterptiKomandas ->Show(true);
+
+	evt.Skip();
+}
+void IterptiKomandas::OnIterptiClicked(wxCommandEvent &evt)
+{
+	evt.Skip();
+}
+
+void IterptiZaidejus::OnIterptiZaidejus(wxCommandEvent &evt)
+{
+	m_frameIterptiZaidejus = new IterptiZaidejus();
+	m_frameIterptiZaidejus->Show(true);
+
+	evt.Skip();
+}
+void IterptiZaidejus::OnIterptiClicked(wxCommandEvent &evt)
+{
+	evt.Skip();
+}
+
+void IterptiVarzybas::OnIterptiVarzybas(wxCommandEvent &evt)
+{
+	m_frameIterptiVarzybas = new IterptiVarzybas();
+	m_frameIterptiVarzybas->Show(true);
+
+	evt.Skip();
+}
+void IterptiVarzybas::OnIterptiClicked(wxCommandEvent &evt)
+{
+	evt.Skip();
+}
+
+void PasalintiKomandas::OnPasalintiKomandas(wxCommandEvent &evt)
+{
+	m_framePasalintiKomandas = new PasalintiKomandas();
+	m_framePasalintiKomandas->Show(true);
+
+	evt.Skip();
+}
+void PasalintiZaidejus::OnPasalintiZaidejus(wxCommandEvent &evt)
+{
+	m_framePasalintiZaidejus = new PasalintiZaidejus();
+	m_framePasalintiZaidejus->Show(true);
+
+	evt.Skip();
+}
+
+void RedaguotiKomandas::OnRedaguotiKomandas(wxCommandEvent &evt)
+{
+	m_frameRedaguotiKomandas = new RedaguotiKomandas();
+	m_frameRedaguotiKomandas->Show(true);
+
+	evt.Skip();
 }
 
 wxString BeTarpu(wxString nice)
