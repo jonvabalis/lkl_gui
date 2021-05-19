@@ -32,6 +32,7 @@ int VarzybaListID;
 int VarzybaID;
 vector<int> VarzybuID;
 wxString VarzybaInfo;
+int Zaideju_Sk;
 
 
 wxString BeTarpu(wxString nice);
@@ -872,7 +873,7 @@ IterptiKomandas::IterptiKomandas() : wxFrame(nullptr, wxID_ANY, L"Komand\u0173 \
 	KomandaSizer->Add(KomandaSizerInfo, 1, wxEXPAND | wxALL, 30);
 	this->SetSizer(KomandaSizer);
 
-	m_IterptiCtrl->Connect(10071, wxEVT_BUTTON, wxCommandEventHandler(IterptiKomandas::OnIterptiClicked), nullptr, this);
+	m_Iterpti->Connect(10071, wxEVT_BUTTON, wxCommandEventHandler(IterptiKomandas::OnIterptiClicked), nullptr, this);
 }
 
 IterptiZaidejus::IterptiZaidejus() : wxFrame(nullptr, wxID_ANY, L"\u017daid\u0117j\u0173 \u012fterpimas", wxPoint(30, 160), wxSize(800, 480))
@@ -959,17 +960,6 @@ IterptiVarzybas::IterptiVarzybas() : wxFrame(nullptr, wxID_ANY, L"Var\u017eyb\u0
 	}
 
 
-	VarzybaSizer = new wxBoxSizer(wxVERTICAL);
-	VarzybaSizerText = new wxBoxSizer(wxVERTICAL);
-	VarzybaKomanda = new wxBoxSizer(wxVERTICAL);
-	VarzybaKomanda1 = new wxBoxSizer(wxHORIZONTAL);
-	VarzybaKomanda2 = new wxBoxSizer(wxHORIZONTAL);
-	VarzybaZaidejai = new wxBoxSizer(wxVERTICAL);
-	VarzybaZaidejai1 = new wxBoxSizer(wxVERTICAL);
-	VarzybaZaidejai2 = new wxBoxSizer(wxVERTICAL);
-	VarzybaSizerInfo = new wxBoxSizer(wxVERTICAL);
-
-
 	SetFont(wxFont(32, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
 	m_mainText1 = new wxStaticText(this, -1, L"Var\u017eyb\u0173 \u012fterpimas");
 
@@ -1002,10 +992,10 @@ IterptiVarzybas::IterptiVarzybas() : wxFrame(nullptr, wxID_ANY, L"Var\u017eyb\u0
 	m_Zaidejai2Choice6 = new wxChoice(this, 10918, wxDefaultPosition, wxSize(185, 25));
 	m_Zaidejai2Choice7 = new wxChoice(this, 10919, wxDefaultPosition, wxSize(185, 25));
 	m_Zaidejai2Choice8 = new wxChoice(this, 10920, wxDefaultPosition, wxSize(185, 25));
-	m_Zaidejai2Choice9 = new wxChoice(this, 10921, wxDefaultPosition, wxSize(185, 25));;
+	m_Zaidejai2Choice9 = new wxChoice(this, 10921, wxDefaultPosition, wxSize(185, 25));
 	m_Zaidejai2Choice10 = new wxChoice(this, 10922, wxDefaultPosition, wxSize(185, 25));
 	m_Zaidejai2Choice11 = new wxChoice(this, 10923, wxDefaultPosition, wxSize(185, 25));
-	m_Zaidejai2Choice12 = new wxChoice(this, 10924, wxDefaultPosition, wxSize(185, 25));;
+	m_Zaidejai2Choice12 = new wxChoice(this, 10924, wxDefaultPosition, wxSize(185, 25));
 
 	SetFont(wxFont(16, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
 	m_IterptiCtrl = new wxTextCtrl(this, 10090);
@@ -1024,44 +1014,20 @@ IterptiVarzybas::IterptiVarzybas() : wxFrame(nullptr, wxID_ANY, L"Var\u017eyb\u0
 
 		KomanduID.push_back(VisosKomandos[i].getID());
 	}
+	m_komanda1Choice->Connect(10092, wxEVT_CHOICE, wxCommandEventHandler(IterptiVarzybas::OnKomanda1Choice), nullptr, this);
+	m_komanda2Choice->Connect(10093, wxEVT_CHOICE, wxCommandEventHandler(IterptiVarzybas::OnKomanda2Choice), nullptr, this);
 
-	wxString Zaidejas;
-	for (int i = 0; i < VisosKomandos[2].getZaidejaiSk(); i++) //KomanduID[m_komanda1Choice->GetSelection()] kazkodel neveikia
-	{
-		Zaidejas = wxString::FromUTF8(VisosKomandos[2].getZaidejai(i));
 
-		m_Zaidejai1Choice1->AppendString(Zaidejas);
-		m_Zaidejai1Choice2->AppendString(Zaidejas);
-		m_Zaidejai1Choice3->AppendString(Zaidejas);
-		m_Zaidejai1Choice4->AppendString(Zaidejas);
-		m_Zaidejai1Choice5->AppendString(Zaidejas);
-		m_Zaidejai1Choice6->AppendString(Zaidejas);
-		m_Zaidejai1Choice7->AppendString(Zaidejas);
-		m_Zaidejai1Choice8->AppendString(Zaidejas);
-		m_Zaidejai1Choice9->AppendString(Zaidejas);
-		m_Zaidejai1Choice10->AppendString(Zaidejas);
-		m_Zaidejai1Choice11->AppendString(Zaidejas);
-		m_Zaidejai1Choice12->AppendString(Zaidejas);
-	}
 
-	for (int i = 0; i < VisosKomandos[2].getZaidejaiSk(); i++)
-	{
-		Zaidejas = wxString::FromUTF8(VisosKomandos[2].getZaidejai(i));
-
-		m_Zaidejai2Choice1->AppendString(Zaidejas);
-		m_Zaidejai2Choice2->AppendString(Zaidejas);
-		m_Zaidejai2Choice3->AppendString(Zaidejas);
-		m_Zaidejai2Choice4->AppendString(Zaidejas);
-		m_Zaidejai2Choice5->AppendString(Zaidejas);
-		m_Zaidejai2Choice6->AppendString(Zaidejas);
-		m_Zaidejai2Choice7->AppendString(Zaidejas);
-		m_Zaidejai2Choice8->AppendString(Zaidejas);
-		m_Zaidejai2Choice9->AppendString(Zaidejas);
-		m_Zaidejai2Choice10->AppendString(Zaidejas);
-		m_Zaidejai2Choice11->AppendString(Zaidejas);
-		m_Zaidejai2Choice12->AppendString(Zaidejas);
-	}
-	
+	VarzybaSizer = new wxBoxSizer(wxVERTICAL);
+	VarzybaSizerText = new wxBoxSizer(wxVERTICAL);
+	VarzybaKomanda = new wxBoxSizer(wxVERTICAL);
+	VarzybaKomanda1 = new wxBoxSizer(wxHORIZONTAL);
+	VarzybaKomanda2 = new wxBoxSizer(wxHORIZONTAL);
+	VarzybaZaidejai = new wxBoxSizer(wxHORIZONTAL);
+	VarzybaZaidejai1 = new wxBoxSizer(wxVERTICAL);
+	VarzybaZaidejai2 = new wxBoxSizer(wxVERTICAL);
+	VarzybaSizerInfo = new wxBoxSizer(wxVERTICAL);
 
 
 	VarzybaSizerText->Add(m_mainText1, 0, wxALIGN_CENTRE_HORIZONTAL);
@@ -1080,36 +1046,36 @@ IterptiVarzybas::IterptiVarzybas() : wxFrame(nullptr, wxID_ANY, L"Var\u017eyb\u0
 	VarzybaSizerInfo->Add(VarzybaKomanda, 1, wxEXPAND | wxBOTTOM, 12);
 
 
-	VarzybaZaidejai1->Add(m_Zaidejai1Choice1, 0, wxEXPAND | wxLEFT, 30);
-	VarzybaZaidejai1->Add(m_Zaidejai1Choice2, 0, wxEXPAND | wxLEFT, 30);
-	VarzybaZaidejai1->Add(m_Zaidejai1Choice3, 0, wxEXPAND | wxLEFT, 30);
-	VarzybaZaidejai1->Add(m_Zaidejai1Choice4, 1, wxEXPAND | wxLEFT, 30);
-	VarzybaZaidejai1->Add(m_Zaidejai1Choice5, 0, wxEXPAND | wxLEFT, 30);
-	VarzybaZaidejai1->Add(m_Zaidejai1Choice6, 1, wxEXPAND | wxLEFT, 30);
-	VarzybaZaidejai1->Add(m_Zaidejai1Choice7, 0, wxEXPAND | wxLEFT, 30);
-	VarzybaZaidejai1->Add(m_Zaidejai1Choice8, 0, wxEXPAND | wxLEFT, 30);
-	VarzybaZaidejai1->Add(m_Zaidejai1Choice9, 0, wxEXPAND | wxLEFT, 30);
-	VarzybaZaidejai1->Add(m_Zaidejai1Choice10, 0, wxEXPAND | wxLEFT, 30);
-	VarzybaZaidejai1->Add(m_Zaidejai1Choice11, 0, wxEXPAND | wxLEFT, 30);
-	VarzybaZaidejai1->Add(m_Zaidejai1Choice12, 0, wxEXPAND | wxLEFT, 30);
+	VarzybaZaidejai1->Add(m_Zaidejai1Choice1, 0, wxLEFT, 30);
+	VarzybaZaidejai1->Add(m_Zaidejai1Choice2, 0, wxLEFT, 30);
+	VarzybaZaidejai1->Add(m_Zaidejai1Choice3, 0, wxLEFT, 30);
+	VarzybaZaidejai1->Add(m_Zaidejai1Choice4, 0, wxLEFT, 30);
+	VarzybaZaidejai1->Add(m_Zaidejai1Choice5, 0, wxLEFT, 30);
+	VarzybaZaidejai1->Add(m_Zaidejai1Choice6, 0, wxLEFT, 30);
+	VarzybaZaidejai1->Add(m_Zaidejai1Choice7, 0, wxLEFT, 30);
+	VarzybaZaidejai1->Add(m_Zaidejai1Choice8, 0, wxLEFT, 30);
+	VarzybaZaidejai1->Add(m_Zaidejai1Choice9, 0, wxLEFT, 30);
+	VarzybaZaidejai1->Add(m_Zaidejai1Choice10, 0, wxLEFT, 30);
+	VarzybaZaidejai1->Add(m_Zaidejai1Choice11, 0, wxLEFT, 30);
+	VarzybaZaidejai1->Add(m_Zaidejai1Choice12, 0, wxLEFT, 30);
 
-	VarzybaZaidejai2->Add(m_Zaidejai2Choice1, 1, wxEXPAND | wxLEFT, 30);
-	VarzybaZaidejai2->Add(m_Zaidejai2Choice2, 1, wxEXPAND | wxLEFT, 30);
-	VarzybaZaidejai2->Add(m_Zaidejai2Choice3, 1, wxEXPAND | wxLEFT, 30);
-	VarzybaZaidejai2->Add(m_Zaidejai2Choice4, 1, wxEXPAND | wxLEFT, 30);
-	VarzybaZaidejai2->Add(m_Zaidejai2Choice5, 1, wxEXPAND | wxLEFT, 30);
-	VarzybaZaidejai2->Add(m_Zaidejai2Choice6, 0, wxEXPAND | wxLEFT, 30);
-	VarzybaZaidejai2->Add(m_Zaidejai2Choice7, 0, wxEXPAND | wxLEFT, 30);
-	VarzybaZaidejai2->Add(m_Zaidejai2Choice8, 0, wxEXPAND | wxLEFT, 30);
-	VarzybaZaidejai2->Add(m_Zaidejai2Choice9, 0, wxEXPAND | wxLEFT, 30);
-	VarzybaZaidejai2->Add(m_Zaidejai2Choice10, 0, wxEXPAND | wxLEFT, 30);
-	VarzybaZaidejai2->Add(m_Zaidejai2Choice11, 0, wxEXPAND | wxLEFT, 30);
-	VarzybaZaidejai2->Add(m_Zaidejai2Choice12, 0, wxEXPAND | wxLEFT, 30);
+	VarzybaZaidejai2->Add(m_Zaidejai2Choice1, 0, wxLEFT, 30);
+	VarzybaZaidejai2->Add(m_Zaidejai2Choice2, 0, wxLEFT, 30);
+	VarzybaZaidejai2->Add(m_Zaidejai2Choice3, 0, wxLEFT, 30);
+	VarzybaZaidejai2->Add(m_Zaidejai2Choice4, 0, wxLEFT, 30);
+	VarzybaZaidejai2->Add(m_Zaidejai2Choice5, 0, wxLEFT, 30);
+	VarzybaZaidejai2->Add(m_Zaidejai2Choice6, 0, wxLEFT, 30);
+	VarzybaZaidejai2->Add(m_Zaidejai2Choice7, 0, wxLEFT, 30);
+	VarzybaZaidejai2->Add(m_Zaidejai2Choice8, 0, wxLEFT, 30);
+	VarzybaZaidejai2->Add(m_Zaidejai2Choice9, 0, wxLEFT, 30);
+	VarzybaZaidejai2->Add(m_Zaidejai2Choice10, 0, wxLEFT, 30);
+	VarzybaZaidejai2->Add(m_Zaidejai2Choice11, 0, wxLEFT, 30);
+	VarzybaZaidejai2->Add(m_Zaidejai2Choice12, 0, wxLEFT, 30);
 
 	VarzybaZaidejai->Add(VarzybaZaidejai1, 0, wxEXPAND | wxBOTTOM, 20);
 	VarzybaZaidejai->Add(VarzybaZaidejai2, 0, wxEXPAND | wxALL, 0);
 
-	VarzybaSizerInfo->Add(VarzybaZaidejai, 0, wxEXPAND | wxRIGHT, 1175);
+	VarzybaSizerInfo->Add(VarzybaZaidejai, 0, wxEXPAND | wxRIGHT);
 
 
 
@@ -1480,6 +1446,32 @@ void IterptiKomandas::OnIterptiKomandas(wxCommandEvent &evt)
 }
 void IterptiKomandas::OnIterptiClicked(wxCommandEvent &evt)
 {
+	int sk, sk2;
+	string tempsk, pav;
+	EiluciuSk("Komandos.txt", sk);
+	sk2 = sk;
+
+	ifstream fd("Komandos.txt");
+	for(int i = 0; i < sk2; i++)
+	{
+		getline(fd, tempsk, '|');
+		getline(fd, pav, '\n');
+
+		if (stoi(tempsk) == sk)
+			sk++;
+	}
+	fd.close();
+
+	ofstream fr("Komandos.txt", ios::app);
+
+	wxString ivestas;
+	ivestas = m_IterptiCtrl->GetValue();
+
+	fr << sk << '|' << ivestas << " |\n";
+
+	fr.close();
+	m_Iterpti->Enable(false);
+
 	evt.Skip();
 }
 
@@ -1504,6 +1496,112 @@ void IterptiVarzybas::OnIterptiVarzybas(wxCommandEvent &evt)
 }
 void IterptiVarzybas::OnIterptiClicked(wxCommandEvent &evt)
 {
+	evt.Skip();
+}
+void IterptiVarzybas::OnKomanda1Choice(wxCommandEvent &evt)
+{
+	m_Zaidejai1Choice1->Clear();
+	m_Zaidejai1Choice2->Clear();
+	m_Zaidejai1Choice3->Clear();
+	m_Zaidejai1Choice4->Clear();
+	m_Zaidejai1Choice5->Clear();
+	m_Zaidejai1Choice6->Clear();
+	m_Zaidejai1Choice7->Clear();
+	m_Zaidejai1Choice8->Clear();
+	m_Zaidejai1Choice9->Clear();
+	m_Zaidejai1Choice10->Clear();
+	m_Zaidejai1Choice11->Clear();
+	m_Zaidejai1Choice12->Clear();
+
+	SkaitytiKomandos Komanda;
+	vector<Komandos> VisosKomandos;
+
+	Komanda.Skaityti("Komandos.txt", 0);
+	Komanda.Skaityti("Zaidejai.txt", 2);
+
+	for (int i = 0; i < Komanda.getPavadinimasSize(); i++)
+	{
+		VisosKomandos.push_back(Komandos(Komanda.getPavadinimas(i)));
+
+		VisosKomandos[i].setID(Komanda.getID(i));
+
+		for (int j = 0; j < Komanda.getKomandosZaidejaiSize(i); j++)
+			VisosKomandos[i].setZaidejai(Komanda.getZaidejai(i, j));
+
+		VisosKomandos[i].setZaidejaiSk(Komanda.getKomandosZaidejaiSize(i));
+	}
+
+	for (int i = 0; i < VisosKomandos[KomanduID[m_komanda1Choice->GetSelection()]].getZaidejaiSk(); i++) //KomanduID[m_komanda1Choice->GetSelection()] kazkodel neveikia
+	{
+		Zaidejas = wxString::FromUTF8(VisosKomandos[KomanduID[m_komanda1Choice->GetSelection()]].getZaidejai(i));
+
+		m_Zaidejai1Choice1->AppendString(Zaidejas);
+		m_Zaidejai1Choice2->AppendString(Zaidejas);
+		m_Zaidejai1Choice3->AppendString(Zaidejas);
+		m_Zaidejai1Choice4->AppendString(Zaidejas);
+		m_Zaidejai1Choice5->AppendString(Zaidejas);
+		m_Zaidejai1Choice6->AppendString(Zaidejas);
+		m_Zaidejai1Choice7->AppendString(Zaidejas);
+		m_Zaidejai1Choice8->AppendString(Zaidejas);
+		m_Zaidejai1Choice9->AppendString(Zaidejas);
+		m_Zaidejai1Choice10->AppendString(Zaidejas);
+		m_Zaidejai1Choice11->AppendString(Zaidejas);
+		m_Zaidejai1Choice12->AppendString(Zaidejas);
+	}
+
+	evt.Skip();
+}
+void IterptiVarzybas::OnKomanda2Choice(wxCommandEvent &evt)
+{
+	m_Zaidejai2Choice1->Clear();
+	m_Zaidejai2Choice2->Clear();
+	m_Zaidejai2Choice3->Clear();
+	m_Zaidejai2Choice4->Clear();
+	m_Zaidejai2Choice5->Clear();
+	m_Zaidejai2Choice6->Clear();
+	m_Zaidejai2Choice7->Clear();
+	m_Zaidejai2Choice8->Clear();
+	m_Zaidejai2Choice9->Clear();
+	m_Zaidejai2Choice10->Clear();
+	m_Zaidejai2Choice11->Clear();
+	m_Zaidejai2Choice12->Clear();
+
+	SkaitytiKomandos Komanda;
+	vector<Komandos> VisosKomandos;
+
+	Komanda.Skaityti("Komandos.txt", 0);
+	Komanda.Skaityti("Zaidejai.txt", 2);
+
+	for (int i = 0; i < Komanda.getPavadinimasSize(); i++)
+	{
+		VisosKomandos.push_back(Komandos(Komanda.getPavadinimas(i)));
+
+		VisosKomandos[i].setID(Komanda.getID(i));
+
+		for (int j = 0; j < Komanda.getKomandosZaidejaiSize(i); j++)
+			VisosKomandos[i].setZaidejai(Komanda.getZaidejai(i, j));
+
+		VisosKomandos[i].setZaidejaiSk(Komanda.getKomandosZaidejaiSize(i));
+	}
+
+	for (int i = 0; i < VisosKomandos[KomanduID[m_komanda2Choice->GetSelection()]].getZaidejaiSk(); i++)
+	{
+		Zaidejas = wxString::FromUTF8(VisosKomandos[KomanduID[m_komanda2Choice->GetSelection()]].getZaidejai(i));
+
+		m_Zaidejai2Choice1->AppendString(Zaidejas);
+		m_Zaidejai2Choice2->AppendString(Zaidejas);
+		m_Zaidejai2Choice3->AppendString(Zaidejas);
+		m_Zaidejai2Choice4->AppendString(Zaidejas);
+		m_Zaidejai2Choice5->AppendString(Zaidejas);
+		m_Zaidejai2Choice6->AppendString(Zaidejas);
+		m_Zaidejai2Choice7->AppendString(Zaidejas);
+		m_Zaidejai2Choice8->AppendString(Zaidejas);
+		m_Zaidejai2Choice9->AppendString(Zaidejas);
+		m_Zaidejai2Choice10->AppendString(Zaidejas);
+		m_Zaidejai2Choice11->AppendString(Zaidejas);
+		m_Zaidejai2Choice12->AppendString(Zaidejas);
+	}
+
 	evt.Skip();
 }
 

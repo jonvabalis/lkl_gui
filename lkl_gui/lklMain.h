@@ -229,11 +229,15 @@ private:
 
 	wxButton *m_Iterpti;
 
+	wxString Zaidejas;
+
 public:
 	IterptiVarzybas();
 
 	void OnIterptiVarzybas(wxCommandEvent &evt);
 	void OnIterptiClicked(wxCommandEvent &evt);
+	void OnKomanda1Choice(wxCommandEvent &evt);
+	void OnKomanda2Choice(wxCommandEvent &evt);
 };
 
 class PasalintiKomandas : public wxFrame
@@ -312,10 +316,10 @@ public:
 			for (i; i < eilsk; i++)
 			{
 				getline(fd, nuskaitytas, '|');
-				ID.push_back(stoi(nuskaitytas));
+				//ID.push_back(stoi(nuskaitytas));
 
 				getline(fd, nuskaitytas, '|');
-				PavadinimaiTemp.push_back(nuskaitytas);
+				//PavadinimaiTemp.push_back(nuskaitytas); //?
 			}
 		}
 		if (x == 1) // kai x == 1, nuskaitomi treneriai 
