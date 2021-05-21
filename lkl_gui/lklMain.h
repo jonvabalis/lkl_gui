@@ -16,6 +16,7 @@ void EiluciuSk(string failas, int &x);
 void RungtyniuSk(string failas, int &rungtyniu_sk);
 void ID_sk(string failas, int ID, int &x, int &ID_pradzia);
 wxString BeTarpu(wxString nice);
+string BeEilutesLuzio(string nice);
 
 class lklMain : public wxFrame
 {
@@ -239,6 +240,30 @@ public:
 	void OnKomanda1Choice(wxCommandEvent &evt);
 	void OnKomanda2Choice(wxCommandEvent &evt);
 };
+class IterptiTrenerius : public wxFrame
+{
+private:
+	IterptiTrenerius *m_frameIterptiTrenerius = nullptr;
+
+	wxBoxSizer *TreneriaiSizer;
+	wxBoxSizer *TreneriaiSizerText;
+	wxBoxSizer *TreneriaiSizerInfo;
+
+	wxChoice *m_komandaChoice;
+
+	wxStaticText *m_mainText1;
+	wxStaticText *m_mainText2;
+
+	wxTextCtrl *m_IterptiCtrl;
+
+	wxButton *m_Iterpti;
+
+public:
+	IterptiTrenerius();
+
+	void OnIterptiTrenerius(wxCommandEvent &evt);
+	void OnIterptiClicked(wxCommandEvent &evt);
+};
 
 class PasalintiKomandas : public wxFrame
 {
@@ -259,6 +284,16 @@ public:
 	PasalintiZaidejus();
 
 	void OnPasalintiZaidejus(wxCommandEvent &evt);
+};
+class PasalintiTrenerius : public wxFrame
+{
+private:
+	PasalintiTrenerius *m_framePasalintiTrenerius = nullptr;
+
+public:
+	PasalintiTrenerius();
+
+	void OnPasalintiTrenerius(wxCommandEvent &evt);
 };
 /*class PasalintiVarzybas : public wxFrame
 {
@@ -316,10 +351,10 @@ public:
 			for (i; i < eilsk; i++)
 			{
 				getline(fd, nuskaitytas, '|');
-				//ID.push_back(stoi(nuskaitytas));
+				ID.push_back(stoi(BeEilutesLuzio(nuskaitytas)));
 
 				getline(fd, nuskaitytas, '|');
-				//PavadinimaiTemp.push_back(nuskaitytas); //?
+				PavadinimaiTemp.push_back(BeEilutesLuzio(nuskaitytas));
 			}
 		}
 		if (x == 1) // kai x == 1, nuskaitomi treneriai 
@@ -333,7 +368,8 @@ public:
 				getline(fd, nuskaitytas, '|');
 
 				getline(fd, nuskaitytas, '|');
-				TreneriaiTemp.push_back(nuskaitytas);
+	
+				TreneriaiTemp.push_back(BeEilutesLuzio(nuskaitytas));
 			}
 		}
 		if (x == 2) // kai x == 2, nuskaitomi zaidejai
@@ -345,6 +381,7 @@ public:
 			for (i; i < eilsk; i++)
 			{
 				getline(fd, nuskaitytas, '|');
+	
 				getline(fd, szaidSk, '|');
 				zaidSk.push_back(stoi(szaidSk)); // kad butu int, o ne string tipo
 
@@ -354,7 +391,7 @@ public:
 				{
 					getline(fd, nuskaitytas, '|'); // padaryti kad skaitytu vektoriun
 
-					Nice.push_back(nuskaitytas);
+					Nice.push_back(BeEilutesLuzio(nuskaitytas));
 				}
 				ZaidejaiTemp.push_back(Nice);
 				fd.ignore(80, '\n');

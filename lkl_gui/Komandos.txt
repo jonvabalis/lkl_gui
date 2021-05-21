@@ -8,4 +8,8 @@
 7|Alytaus „Dzūkija“|
 8|Kėdainių „Nevėžis“|
 9|Šiaulių „Šiauliai“|
-10|yo |
+10|labas|
+11|noriu miegoti|
+12|labanakt|
+13|kodėl nemiegi|
+14|team "labanakt"|

@@ -54,7 +54,6 @@ lklMain::lklMain() : wxFrame(nullptr, wxID_ANY, L"Lietuvos krep\u0161inio lygos 
 	SetBackgroundColour(wxColour(168, 240, 187));
 
 
-	
 	//------------------------------
 
 	SkaitytiKomandos Komanda;
@@ -77,6 +76,7 @@ lklMain::lklMain() : wxFrame(nullptr, wxID_ANY, L"Lietuvos krep\u0161inio lygos 
 
 		VisosKomandos[i].setZaidejaiSk(Komanda.getKomandosZaidejaiSize(i));
 	}
+
 
 	//------------------------------
 
@@ -104,9 +104,13 @@ lklMain::lklMain() : wxFrame(nullptr, wxID_ANY, L"Lietuvos krep\u0161inio lygos 
 		wxT("\u012eterpti \u017eaid\u0117jus"));
 	Connect(10032, wxEVT_MENU, wxCommandEventHandler(IterptiZaidejus::OnIterptiZaidejus), nullptr, this);
 
-	iterpimasMenu->Append(10033, wxT("&\u012eterpti var\u017eybas"),
+	iterpimasMenu->Append(10033, wxT("&\u012eterpti trenerius"),
+		wxT("\u012eterpti trenerius"));
+	Connect(10033, wxEVT_MENU, wxCommandEventHandler(IterptiTrenerius::OnIterptiTrenerius), nullptr, this);
+
+	iterpimasMenu->Append(10034, wxT("&\u012eterpti var\u017eybas"),
 		wxT("\u012eterpti var\u017eybas"));
-	Connect(10033, wxEVT_MENU, wxCommandEventHandler(IterptiVarzybas::OnIterptiVarzybas), nullptr, this);
+	Connect(10034, wxEVT_MENU, wxCommandEventHandler(IterptiVarzybas::OnIterptiVarzybas), nullptr, this);
 
 	pasalinimasMenu->Append(10041, wxT("&Pa\u0161alinti komandas"),
 		wxT("Pa\u0161alinti komandas"));
@@ -115,6 +119,10 @@ lklMain::lklMain() : wxFrame(nullptr, wxID_ANY, L"Lietuvos krep\u0161inio lygos 
 	pasalinimasMenu->Append(10042, wxT("&Pa\u0161alinti \u017eaid\u0117jus"),
 		wxT("Pa\u0161alinti \u017eaid\u0117jus"));
 	Connect(10042, wxEVT_MENU, wxCommandEventHandler(PasalintiZaidejus::OnPasalintiZaidejus), nullptr, this);
+
+	pasalinimasMenu->Append(10043, wxT("&Pa\u0161alinti trenerius"),
+		wxT("Pa\u0161alinti trenerius"));
+	Connect(10043, wxEVT_MENU, wxCommandEventHandler(PasalintiTrenerius::OnPasalintiTrenerius), nullptr, this);
 
 	/*pasalinimasMenu->Append(10043, wxT("&Pa\u0161alinti var\u017eybas"),
 		wxT("Pa\u0161alinti var\u017eybas"));
@@ -163,7 +171,6 @@ lklMain::lklMain() : wxFrame(nullptr, wxID_ANY, L"Lietuvos krep\u0161inio lygos 
 
 	//m_titulinisButton1 = new wxButton(this, 10001, L"Patvirtinti pasirinkim\u0105");
 	m_titulinisButton2 = new wxButton(this, 10002, L"Rodyti informacij\u0105");
-
 
 
 	wxBoxSizer *Titulinis = new wxBoxSizer(wxVERTICAL);
@@ -222,7 +229,6 @@ lklMain::lklMain() : wxFrame(nullptr, wxID_ANY, L"Lietuvos krep\u0161inio lygos 
 	Titulinis->Add(TitulinisButtonGrid, 2, wxEXPAND | wxALL, 42);
 	this->SetSizer(Titulinis);
 
-	
 
 
 	wxString wxKomanda;
@@ -552,45 +558,6 @@ ZaidKomentaras::ZaidKomentaras() : wxFrame(nullptr, wxID_ANY, L"Komentaras apie 
 			Lentele.push_back(wxVariant("-"));
 
 	StatistikaTable->AppendItem(Lentele);
-	/*for (int i = 0; i < VisosVarzybos[VarzybaID].getKomandaSk1(); i++)
-	{
-		Lentele.clear();
-
-		//zaidejas
-		Lentele.push_back(wxVariant(wxString::FromUTF8(VisosVarzybos[VarzybaID].getKomandaInfo1(i, 0))));
-		//minutes
-		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo1(i, 1)));
-		//2PM-A
-		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo1(i, 2) + '-' + VisosVarzybos[VarzybaID].getKomandaInfo1(i, 3)));
-		//3PM-A
-		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo1(i, 4) + '-' + VisosVarzybos[VarzybaID].getKomandaInfo1(i, 5)));
-		//FTM-A
-		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo1(i, 6) + '-' + VisosVarzybos[VarzybaID].getKomandaInfo1(i, 7)));
-		//REB
-		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo1(i, 8)));
-		//AS
-		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo1(i, 9)));
-		//ST
-		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo1(i, 10)));
-		//TO
-		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo1(i, 11)));
-		//BS
-		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo1(i, 12)));
-		//RBS
-		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo1(i, 13)));
-		//PF
-		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo1(i, 14)));
-		//RF
-		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo1(i, 15)));
-		//PTS
-		Lentele.push_back(wxVariant(VisosVarzybos[VarzybaID].getKomandaInfo1(i, 16)));
-		//EFF
-		Lentele.push_back(wxVariant(to_string(Naudingumas(VisosVarzybos, VarzybaID, i, 0))));
-
-		StatistikaTable->AppendItem(Lentele);
-	}*/
-
-
 }
 
 VarzybaFrame::VarzybaFrame() : wxFrame(nullptr, wxID_ANY, L"Var\u017eyb\u0173 protokolas apie krep\u0161ininkus", wxPoint(30, 30), wxSize(1400, 985))
@@ -935,6 +902,66 @@ IterptiZaidejus::IterptiZaidejus() : wxFrame(nullptr, wxID_ANY, L"\u017daid\u011
 	m_IterptiCtrl->Connect(10081, wxEVT_BUTTON, wxCommandEventHandler(IterptiZaidejus::OnIterptiClicked), nullptr, this);
 }
 
+IterptiTrenerius::IterptiTrenerius() : wxFrame(nullptr, wxID_ANY, L"Treneri\u0173 \u012fterpimas", wxPoint(30, 160), wxSize(800, 480))
+{
+	SetIcon(wxIcon("aaaaaaaa"));
+	SetBackgroundColour(wxColour(135, 245, 66));
+
+
+	SkaitytiKomandos Komanda;
+	vector<Komandos> VisosKomandos;
+
+	Komanda.Skaityti("Komandos.txt", 0);
+
+	for (int i = 0; i < Komanda.getPavadinimasSize(); i++)
+		VisosKomandos.push_back(Komandos(Komanda.getPavadinimas(i)));
+
+
+	TreneriaiSizer = new wxBoxSizer(wxVERTICAL);
+	TreneriaiSizerText = new wxBoxSizer(wxVERTICAL);
+	TreneriaiSizerInfo = new wxBoxSizer(wxVERTICAL);
+
+
+	SetFont(wxFont(32, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+	m_mainText1 = new wxStaticText(this, -1, L"Treneri\u0173 \u012fterpimas");
+	m_mainText2 = new wxStaticText(this, -1, L"Pirmiausia pasirinkite komand\u0105:");
+
+	SetFont(wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+	m_komandaChoice = new wxChoice(this, 10982, wxDefaultPosition, wxSize(1920, 50));
+
+	SetFont(wxFont(16, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+	m_IterptiCtrl = new wxTextCtrl(this, 10980);
+	m_IterptiCtrl->SetHint(L"pvz.: Martin Schiller");
+	m_Iterpti = new wxButton(this, 10981, L"\u012eterpti");
+
+
+	TreneriaiSizerText->Add(m_mainText1, 0, wxALIGN_CENTRE_HORIZONTAL);
+	TreneriaiSizerText->Add(m_mainText2, 0, wxALIGN_CENTRE_HORIZONTAL);
+	TreneriaiSizerInfo->Add(TreneriaiSizerText, 0, wxEXPAND | wxBOTTOM, 69);
+	TreneriaiSizerInfo->Add(m_komandaChoice, 0, wxEXPAND | wxALL, 0);
+	TreneriaiSizerInfo->Add(m_IterptiCtrl, 0, wxEXPAND | wxALL, 30);
+	TreneriaiSizerInfo->Add(m_Iterpti, 0, wxEXPAND | wxLEFT, 0);
+
+	TreneriaiSizer->Add(TreneriaiSizerInfo, 1, wxEXPAND | wxALL, 30);
+	this->SetSizer(TreneriaiSizer);
+
+
+
+	wxString wxKomanda;
+	KomanduID.clear();
+
+	for (int i = 0; i < Komanda.getPavadinimasSize(); i++)
+	{
+		wxKomanda = wxString::FromUTF8(VisosKomandos[i].getPavadinimas());
+
+		m_komandaChoice->AppendString(wxKomanda);
+
+		KomanduID.push_back(VisosKomandos[i].getID());
+	}
+
+	m_Iterpti->Connect(10981, wxEVT_BUTTON, wxCommandEventHandler(IterptiTrenerius::OnIterptiClicked), nullptr, this);
+}
+
 IterptiVarzybas::IterptiVarzybas() : wxFrame(nullptr, wxID_ANY, L"Var\u017eyb\u0173 \u012fterpimas", wxPoint(30, 30), wxSize(1400, 985))
 {
 	SetIcon(wxIcon("aaaaaaaa"));
@@ -1103,6 +1130,12 @@ PasalintiZaidejus::PasalintiZaidejus() : wxFrame(nullptr, wxID_ANY, L"\u017daid\
 	SetBackgroundColour(wxColour(136, 209, 90));
 }
 
+PasalintiTrenerius::PasalintiTrenerius() : wxFrame(nullptr, wxID_ANY, L"Treneri\u0173 pa\u0161alinimas", wxPoint(30, 160), wxSize(800, 480))
+{
+	SetIcon(wxIcon("aaaaaaaa"));
+	SetBackgroundColour(wxColour(136, 209, 90));
+}
+
 RedaguotiKomandas::RedaguotiKomandas() : wxFrame(nullptr, wxID_ANY, L"Komand\u0173 redagavimas", wxPoint(30, 160), wxSize(800, 480))
 {
 	SetIcon(wxIcon("aaaaaaaa"));
@@ -1245,7 +1278,17 @@ void lklMain::OnKomandaChoice(wxCommandEvent &evt)
 void lklMain::OnRadioClicked(wxCommandEvent &evt)
 {
 	m_titulinisList->Clear();
-	m_komandaChoice->SetSelection(-1);
+	m_komandaChoice->Clear();
+
+	//perkraunamas choice listas jeigu iterpta nauja komanda
+	SkaitytiKomandos Komanda;
+	Komanda.Skaityti("Komandos.txt", 0);
+	KomanduID.clear();
+	for (int i = 0; i < Komanda.getPavadinimasSize(); i++)
+	{
+		m_komandaChoice->AppendString(wxString::FromUTF8(Komanda.getPavadinimas(i)));
+		KomanduID.push_back(Komanda.getID(i));
+	}
 
 
 	SkaitytiVarzybos Varzyba;
@@ -1463,13 +1506,24 @@ void IterptiKomandas::OnIterptiClicked(wxCommandEvent &evt)
 	fd.close();
 
 	ofstream fr("Komandos.txt", ios::app);
-
 	wxString ivestas;
 	ivestas = m_IterptiCtrl->GetValue();
-
-	fr << sk << '|' << ivestas << " |\n";
-
+	fr << sk << '|' << ivestas << "|\n";
 	fr.close();
+
+
+	//nezinomas veikejas atlieka placeholder paskirti, nes kitu atveju nuskaitymo cikle
+	//netiks getKomandaPavadinimasSize()
+	ofstream fx("Treneriai.txt", ios::app);
+	ivestas = L"Ne\u017einomas veik\u0117jas";
+	fx << sk << '|' << ivestas.ToUTF8() << "|\n";
+	fx.close();
+
+	ofstream fz("Zaidejai.txt", ios::app);
+	fz << sk << "|1|" << ivestas.ToUTF8() << "|\n";
+	fz.close();
+
+
 	m_Iterpti->Enable(false);
 
 	evt.Skip();
@@ -1484,6 +1538,55 @@ void IterptiZaidejus::OnIterptiZaidejus(wxCommandEvent &evt)
 }
 void IterptiZaidejus::OnIterptiClicked(wxCommandEvent &evt)
 {
+	evt.Skip();
+}
+
+void IterptiTrenerius::OnIterptiTrenerius(wxCommandEvent &evt)
+{
+	m_frameIterptiTrenerius = new IterptiTrenerius();
+	m_frameIterptiTrenerius->Show(true);
+
+	evt.Skip();
+}
+void IterptiTrenerius::OnIterptiClicked(wxCommandEvent &evt)
+{
+	int kind = KomanduID[m_komandaChoice->GetSelection()], eilsk;
+	string tempeilute;
+	wxString neweilute = m_IterptiCtrl->GetValue();
+
+	EiluciuSk("Treneriai.txt", eilsk);
+
+	ifstream fd("Treneriai.txt");
+	ofstream fr("Treneriai2.txt");
+
+	//neveikia
+	for (int i = 0; i < eilsk; i++)
+	{
+		getline(fd, tempeilute, '|');
+		if (stoi(tempeilute) == kind)
+		{
+			getline(fd, tempeilute, '|');
+			fr << neweilute << "|\n";
+		}
+		else if (stoi(tempeilute) != kind)
+		{
+			fr << BeEilutesLuzio(tempeilute) << '|';
+
+			getline(fd, tempeilute, '|');
+
+			fr << BeEilutesLuzio(tempeilute) << "|\n";
+		}
+	}
+
+	fr.close();
+	fd.close();
+
+	remove("Treneriai.txt");
+	rename("Treneriai2.txt", "Treneriai.txt");
+
+	m_Iterpti->Enable(false);
+
+
 	evt.Skip();
 }
 
@@ -1612,6 +1715,15 @@ void PasalintiKomandas::OnPasalintiKomandas(wxCommandEvent &evt)
 
 	evt.Skip();
 }
+
+void PasalintiTrenerius::OnPasalintiTrenerius(wxCommandEvent &evt)
+{
+	m_framePasalintiTrenerius = new PasalintiTrenerius();
+	m_framePasalintiTrenerius->Show(true);
+
+	evt.Skip();
+}
+
 void PasalintiZaidejus::OnPasalintiZaidejus(wxCommandEvent &evt)
 {
 	m_framePasalintiZaidejus = new PasalintiZaidejus();
