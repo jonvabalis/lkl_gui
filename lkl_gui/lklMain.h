@@ -280,20 +280,28 @@ class PasalintiZaidejus : public wxFrame
 private:
 	PasalintiZaidejus *m_framePasalintiZaidejus = nullptr;
 
+	wxBoxSizer *ZaidejaiSizer;
+	wxBoxSizer *ZaidejaiSizerText;
+	wxBoxSizer *ZaidejaiSizerInfo;
+
+	wxChoice *m_komandaChoice;
+	wxChoice *m_zaidejasChoice;
+
+	wxStaticText *m_mainText;
+	wxStaticText *m_mainText1;
+	wxStaticText *m_mainText2;
+
+	wxButton *m_Salinti;
+
+	int IDkomandos;
+	string Zaidejas;
+
 public:
 	PasalintiZaidejus();
 
 	void OnPasalintiZaidejus(wxCommandEvent &evt);
-};
-class PasalintiTrenerius : public wxFrame
-{
-private:
-	PasalintiTrenerius *m_framePasalintiTrenerius = nullptr;
-
-public:
-	PasalintiTrenerius();
-
-	void OnPasalintiTrenerius(wxCommandEvent &evt);
+	void OnPasalintiClicked(wxCommandEvent &evt);
+	void OnKomandaChoice(wxCommandEvent &evt);
 };
 /*class PasalintiVarzybas : public wxFrame
 {

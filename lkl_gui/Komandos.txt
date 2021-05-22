@@ -12,3 +12,4 @@
 11|atlanta "hawks"|
 12|memphis "grizzlies"|
 13|indiana "pacers"|
+14|bruklino "nets"|
