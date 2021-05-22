@@ -8,8 +8,7 @@
 7|Nikola Vasilev|
 8|David Gale|
 9|Antanas Sireika|
-10|Nežinomas veikėjas|
-11|Nežinomas veikėjas|
-12|Nežinomas veikėjas|
-13|Nežinomas veikėjas|
-14|Nežinomas veikėjas|
+10|ponas Motiejus|
+11|nate mcmillan|
+12|Steve Kerr|
+13|nate bjorkgen|

@@ -855,7 +855,10 @@ IterptiZaidejus::IterptiZaidejus() : wxFrame(nullptr, wxID_ANY, L"\u017daid\u011
 	Komanda.Skaityti("Komandos.txt", 0);
 
 	for (int i = 0; i < Komanda.getPavadinimasSize(); i++)
+	{
 		VisosKomandos.push_back(Komandos(Komanda.getPavadinimas(i)));
+		VisosKomandos[i].setID(Komanda.getID(i));
+	}
 
 
 	ZaidejaiSizer = new wxBoxSizer(wxVERTICAL);
@@ -899,7 +902,7 @@ IterptiZaidejus::IterptiZaidejus() : wxFrame(nullptr, wxID_ANY, L"\u017daid\u011
 		KomanduID.push_back(VisosKomandos[i].getID());
 	}
 
-	m_IterptiCtrl->Connect(10081, wxEVT_BUTTON, wxCommandEventHandler(IterptiZaidejus::OnIterptiClicked), nullptr, this);
+	m_Iterpti->Connect(10081, wxEVT_BUTTON, wxCommandEventHandler(IterptiZaidejus::OnIterptiClicked), nullptr, this);
 }
 
 IterptiTrenerius::IterptiTrenerius() : wxFrame(nullptr, wxID_ANY, L"Treneri\u0173 \u012fterpimas", wxPoint(30, 160), wxSize(800, 480))
@@ -914,8 +917,10 @@ IterptiTrenerius::IterptiTrenerius() : wxFrame(nullptr, wxID_ANY, L"Treneri\u017
 	Komanda.Skaityti("Komandos.txt", 0);
 
 	for (int i = 0; i < Komanda.getPavadinimasSize(); i++)
+	{
 		VisosKomandos.push_back(Komandos(Komanda.getPavadinimas(i)));
-
+		VisosKomandos[i].setID(Komanda.getID(i));
+	}
 
 	TreneriaiSizer = new wxBoxSizer(wxVERTICAL);
 	TreneriaiSizerText = new wxBoxSizer(wxVERTICAL);
@@ -1399,7 +1404,7 @@ void ZaidKomentaras::OnPridetiClicked(wxCommandEvent &evt)
 	wxString ivestas;
 	ivestas = m_PridetiCtrl->GetValue();
 
-	fr << BeTarpu(stringZaidejas).ToUTF8() << '|' << ivestas << " |\n";
+	fr << BeTarpu(stringZaidejas).ToUTF8() << '|' << ivestas.ToUTF8() << " |\n";
 
 	fr.close();
 	m_Prideti->Enable(false);
@@ -1430,7 +1435,7 @@ void ZaidKomentaras::OnRedaguotiClicked(wxCommandEvent &evt)
 		if (BeEilutesLuzio(tempeilute2) == BeTarpu(stringZaidejas).ToUTF8())
 		{
 			getline(fd, tempeilute2, '|');
-			fr << neweilute;
+			fr << neweilute.ToUTF8();
 		}
 		else if (BeEilutesLuzio(tempeilute2) != BeTarpu(stringZaidejas).ToUTF8())
 		{
@@ -1512,14 +1517,15 @@ void IterptiKomandas::OnIterptiClicked(wxCommandEvent &evt)
 	fr.close();
 
 
-	//nezinomas veikejas atlieka placeholder paskirti, nes kitu atveju nuskaitymo cikle
+	//nezinomas "xx" atlieka placeholder paskirti, nes kitu atveju nuskaitymo cikle
 	//netiks getKomandaPavadinimasSize()
 	ofstream fx("Treneriai.txt", ios::app);
-	ivestas = L"Ne\u017einomas veik\u0117jas";
+	ivestas = L"Ne\u017einomas treneris";
 	fx << sk << '|' << ivestas.ToUTF8() << "|\n";
 	fx.close();
 
 	ofstream fz("Zaidejai.txt", ios::app);
+	ivestas = L"Ne\u017einomas \u017eaid\u0117jas";
 	fz << sk << "|1|" << ivestas.ToUTF8() << "|\n";
 	fz.close();
 
@@ -1538,6 +1544,75 @@ void IterptiZaidejus::OnIterptiZaidejus(wxCommandEvent &evt)
 }
 void IterptiZaidejus::OnIterptiClicked(wxCommandEvent &evt)
 {
+	int kind = KomanduID[m_komandaChoice->GetSelection()], eilsk, zaidsk;
+	string tempeilute;
+	wxString neweilute = m_IterptiCtrl->GetValue();
+	wxString zaideilute = L"Ne\u017einomas \u017eaid\u0117jas";
+
+	EiluciuSk("Zaidejai.txt", eilsk);
+
+	ifstream fd("Zaidejai.txt");
+	ofstream fr("Zaidejai2.txt");
+	
+
+	for (int i = 0; i < eilsk; i++)
+	{
+		std::getline(fd, tempeilute, '|');
+
+		if (stoi(BeEilutesLuzio(tempeilute)) == kind)
+		{
+			std::getline(fd, tempeilute, '|');
+			zaidsk = stoi(BeEilutesLuzio(tempeilute));
+
+			std::getline(fd, tempeilute, '|');
+
+			if (zaidsk == 1 && tempeilute == zaideilute.ToUTF8())
+				fr << kind << '|' << zaidsk << '|' << neweilute << "|\n";
+			else if (tempeilute != zaideilute.ToUTF8())
+			{
+				fr << kind << '|' << zaidsk + 1 << '|';
+
+				fr << tempeilute << '|';
+
+				//zaidsk - 1, nes pries if nuskaitau zaideja
+				for (int j = 0; j < zaidsk - 1; j++)
+				{
+					std::getline(fd, tempeilute, '|');
+
+					fr << tempeilute << '|';
+				}
+				
+				fr << neweilute << "|\n";
+			}
+		}
+		else
+		{
+			fr << BeEilutesLuzio(tempeilute) << '|';
+
+			std::getline(fd, tempeilute, '|');
+			zaidsk = stoi(BeEilutesLuzio(tempeilute));
+			fr << zaidsk << "|";
+
+			for (int j = 0; j < zaidsk; j++)
+			{
+				std::getline(fd, tempeilute, '|');
+
+				fr << tempeilute << '|';
+			}
+
+			fr << '\n';
+		}
+	}
+
+	fr.close();
+	fd.close();
+
+	std::remove("Zaidejai.txt");
+	std::rename("Zaidejai2.txt", "Zaidejai.txt");
+
+	m_Iterpti->Enable(false);
+
+
 	evt.Skip();
 }
 
@@ -1559,16 +1634,16 @@ void IterptiTrenerius::OnIterptiClicked(wxCommandEvent &evt)
 	ifstream fd("Treneriai.txt");
 	ofstream fr("Treneriai2.txt");
 
-	//neveikia
 	for (int i = 0; i < eilsk; i++)
 	{
 		getline(fd, tempeilute, '|');
-		if (stoi(tempeilute) == kind)
+
+		if (stoi(BeEilutesLuzio(tempeilute)) == kind)
 		{
 			getline(fd, tempeilute, '|');
-			fr << neweilute << "|\n";
+			fr << kind << '|' << neweilute << "|\n";
 		}
-		else if (stoi(tempeilute) != kind)
+		else
 		{
 			fr << BeEilutesLuzio(tempeilute) << '|';
 

@@ -8,8 +8,7 @@
 7|Alytaus „Dzūkija“|
 8|Kėdainių „Nevėžis“|
 9|Šiaulių „Šiauliai“|
-10|labas|
-11|noriu miegoti|
-12|labanakt|
-13|kodėl nemiegi|
-14|team "labanakt"|
+10|team "garfildas"|
+11|atlanta "hawks"|
+12|memphis "grizzlies"|
+13|indiana "pacers"|
