@@ -270,10 +270,21 @@ class PasalintiKomandas : public wxFrame
 private:
 	PasalintiKomandas *m_framePasalintiKomandas = nullptr;
 
+	wxBoxSizer *KomandaSizer;
+	wxBoxSizer *KomandaSizerText;
+	wxBoxSizer *KomandaSizerInfo;
+
+	wxStaticText *m_mainText1;
+
+	wxChoice *m_komandaChoice;
+
+	wxButton *m_Salinti;
+
 public:
 	PasalintiKomandas();
 
 	void OnPasalintiKomandas(wxCommandEvent &evt);
+	void OnPasalintiClicked(wxCommandEvent &evt);
 };
 class PasalintiZaidejus : public wxFrame
 {

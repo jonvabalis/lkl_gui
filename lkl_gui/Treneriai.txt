@@ -11,5 +11,3 @@
 10|ponas Motiejus|
 11|nate mcmillan|
 12|Steve Kerr|
-13|nate bjorkgen|
-14|Steve Nash|

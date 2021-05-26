@@ -8,8 +8,6 @@
 7|13|Thomas Xavier Dziagwa|Martynas Zigmantavičius|Paolo Marinelli|Tomas Pačėsas|Modestas Paulauskas|Paulius Danisevičius|Kristupas Žemaitis|Artūras Jomantas|Giedrius Staniulis|Matas Jucikas|Tadas Rinkūnas|Simas Jasaitis|Adas Šiumbrys|
 8|14|E.J. Montgomery|Imru Duke|Sedrick Barefield|Ariel Hukporti|Panagiotis Kalaitzakis|Justas Tamulis|Jokūbas Gintvainis|Abramo Canka|Grantas Vasiliauskas|Julius Kazakauskas|Matas Razbadauskas|Ignas Lukošius|Martynas Pocevičius|Domantas Vilys|
 9|16|Daniel Baslyk|Martynas Varnas|Aurimas Urbonas|Eimantas Stankevičius|Šarūnas Valunta|Ernestas Jonkus|Arminas Urbutis|Andy Van Vliet|Elvar Mar Fridriksson|Ryan Anderson|Kaspars Berzins|Justas Furmanavičius|Denis Krestinin|Paulius Danusevičius|Mindaugas Lukauskis|Jonas Paukštė|
-10|1|garfieldas 123|
+10|1|Nežinomas žaidėjas|
 11|1|Bogdan Boganovic|
-12|4|Ja Morant|Brandon Clarke|Jonas Jeiga|Steph Curry|
-13|1|Domantas sabonis|
-14|4|Mike James|Kevinas Durantas|Kyrie Irving|James Harden|
+12|3|Ja Morant|Brandon Clarke|Steph Curry|
