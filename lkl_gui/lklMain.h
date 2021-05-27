@@ -330,10 +330,24 @@ class RedaguotiKomandas : public wxFrame
 private:
 	RedaguotiKomandas *m_frameRedaguotiKomandas = nullptr;
 
+	wxBoxSizer *KomandaSizer;
+	wxBoxSizer *KomandaSizerText;
+	wxBoxSizer *KomandaSizerInfo;
+
+	wxChoice *m_komandaChoice;
+	wxTextCtrl *m_komandaCtrl;
+
+	wxStaticText *m_mainText;
+	wxStaticText *m_mainText1;
+	wxStaticText *m_mainText2;
+
+	wxButton *m_Redaguoti;
+
 public:
 	RedaguotiKomandas();
 
 	void OnRedaguotiKomandas(wxCommandEvent &evt);
+	void OnRedaguotiClicked(wxCommandEvent &evt);
 };
 
 

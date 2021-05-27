@@ -8,6 +8,5 @@
 7|Nikola Vasilev|
 8|David Gale|
 9|Antanas Sireika|
-10|ponas Motiejus|
-11|nate mcmillan|
-12|Steve Kerr|
+10|nate mcmillan|
+11|Steve Kerr|

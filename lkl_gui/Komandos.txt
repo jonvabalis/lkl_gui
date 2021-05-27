@@ -8,6 +8,5 @@
 7|Alytaus „Dzūkija“|
 8|Kėdainių „Nevėžis“|
 9|Šiaulių „Šiauliai“|
-10|team "garfildas"|
-11|atlanta "hawks"|
-12|memphis "grizzlies"|
+10|atlanta "hawks"|
+11|memphis "grizzlies"|

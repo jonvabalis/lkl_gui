@@ -55,7 +55,6 @@ lklMain::lklMain() : wxFrame(nullptr, wxID_ANY, L"Lietuvos krep\u0161inio lygos 
 
 
 	//------------------------------
-
 	SkaitytiKomandos Komanda;
 	vector<Komandos> VisosKomandos;
 
@@ -76,7 +75,6 @@ lklMain::lklMain() : wxFrame(nullptr, wxID_ANY, L"Lietuvos krep\u0161inio lygos 
 
 		VisosKomandos[i].setZaidejaiSk(Komanda.getKomandosZaidejaiSize(i));
 	}
-
 
 	//------------------------------
 
@@ -223,7 +221,7 @@ lklMain::lklMain() : wxFrame(nullptr, wxID_ANY, L"Lietuvos krep\u0161inio lygos 
 
 		KomanduID.push_back(VisosKomandos[i].getID());
 	}
-
+	
 
 	m_titulinisButton2->Connect(10002, wxEVT_BUTTON, wxCommandEventHandler(ZaidKomentaras::OnZaidejasClicked), nullptr, this);
 }
@@ -1234,6 +1232,70 @@ RedaguotiKomandas::RedaguotiKomandas() : wxFrame(nullptr, wxID_ANY, L"Komand\u01
 {
 	SetIcon(wxIcon("aaaaaaaa"));
 	SetBackgroundColour(wxColour(117, 212, 57));
+
+
+	SkaitytiKomandos Komanda;
+	vector<Komandos> VisosKomandos;
+
+	Komanda.Skaityti("Komandos.txt", 0);
+	Komanda.Skaityti("Zaidejai.txt", 2);
+
+	for (int i = 0; i < Komanda.getPavadinimasSize(); i++)
+	{
+		VisosKomandos.push_back(Komandos(Komanda.getPavadinimas(i)));
+		VisosKomandos[i].setID(Komanda.getID(i));
+
+		for (int j = 0; j < Komanda.getKomandosZaidejaiSize(i); j++)
+			VisosKomandos[i].setZaidejai(Komanda.getZaidejai(i, j));
+
+		VisosKomandos[i].setZaidejaiSk(Komanda.getKomandosZaidejaiSize(i));
+	}
+
+
+	KomandaSizer = new wxBoxSizer(wxVERTICAL);
+	KomandaSizerText = new wxBoxSizer(wxVERTICAL);
+	KomandaSizerInfo = new wxBoxSizer(wxVERTICAL);
+
+
+	SetFont(wxFont(32, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+	m_mainText = new wxStaticText(this, -1, L"Komand\u0173 redagavimas");
+
+	SetFont(wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+	m_mainText1 = new wxStaticText(this, -1, L"Pasirinkite komand\u0105:");
+	m_mainText2 = new wxStaticText(this, -1, L"Para\u0161ykite nauj\u0105 pavadinim\u0105:");
+	m_komandaChoice = new wxChoice(this, 10210, wxDefaultPosition, wxSize(1920, 50));
+
+	SetFont(wxFont(16, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+	m_komandaCtrl = new wxTextCtrl(this, 10211);
+	m_Redaguoti = new wxButton(this, 10212, "Redaguoti");
+
+
+	KomandaSizerText->Add(m_mainText, 0, wxALIGN_CENTRE_HORIZONTAL);
+	KomandaSizerInfo->Add(KomandaSizerText, 0, wxEXPAND | wxBOTTOM, 69);
+	KomandaSizerInfo->Add(m_mainText1, 0, wxEXPAND | wxALL, 0);
+	KomandaSizerInfo->Add(m_komandaChoice, 0, wxEXPAND | wxALL, 0);
+	KomandaSizerInfo->Add(m_mainText2, 0, wxEXPAND | wxALL, 0);
+	KomandaSizerInfo->Add(m_komandaCtrl, 0, wxEXPAND | wxBOTTOM, 30);
+	KomandaSizerInfo->Add(m_Redaguoti, 0, wxEXPAND | wxLEFT, 0);
+
+	KomandaSizer->Add(KomandaSizerInfo, 1, wxEXPAND | wxALL, 30);
+	this->SetSizer(KomandaSizer);
+
+
+	wxString wxKomanda;
+	KomanduID.clear();
+
+	for (int i = 0; i < Komanda.getPavadinimasSize(); i++)
+	{
+		wxKomanda = wxString::FromUTF8(VisosKomandos[i].getPavadinimas());
+
+		m_komandaChoice->AppendString(wxKomanda);
+
+		KomanduID.push_back(VisosKomandos[i].getID());
+	}
+
+	//m_komandaChoice->Connect(10087, wxEVT_CHOICE, wxCommandEventHandler(PasalintiZaidejus::OnKomandaChoice), nullptr, this);
+	m_Redaguoti->Connect(10212, wxEVT_BUTTON, wxCommandEventHandler(RedaguotiKomandas::OnRedaguotiClicked), nullptr, this);
 }
 
 
@@ -1881,10 +1943,134 @@ void PasalintiKomandas::OnPasalintiKomandas(wxCommandEvent &evt)
 }
 void PasalintiKomandas::OnPasalintiClicked(wxCommandEvent &evt)
 {
-	int IDkomandos = m_komandaChoice->GetSelection();
+	int IDkomandos = KomanduID[m_komandaChoice->GetSelection()];
+	int eilsk, zaidsk;
+	string tempeilute, tempeilute2;
+	EiluciuSk("Komandos.txt", eilsk);
+	
+	ifstream fd("Komandos.txt");
+	ofstream fr("Komandos2.txt");
+
+	//pasalinama komanda
+	for (int i = 0; i < eilsk; i++)
+	{
+		getline(fd, tempeilute, '|');
+
+		if (stoi(BeEilutesLuzio(tempeilute)) == IDkomandos)
+			getline(fd, tempeilute, '|');
+		else
+		{
+			fr << stoi(BeEilutesLuzio(tempeilute)) << '|';
+
+			getline(fd, tempeilute, '|');
+			fr << tempeilute << "|\n";
+		}
+	}
+
+	fd.close();
+	fr.close();
+
+	remove("Komandos.txt");
+	rename("Komandos2.txt", "Komandos.txt");
 
 
+	fd.open("Treneriai.txt");
+	fr.open("Treneriai2.txt");
+	EiluciuSk("Treneriai.txt", eilsk);
 
+	//pasalinamas treneris
+	for (int i = 0; i < eilsk; i++)
+	{
+		getline(fd, tempeilute, '|');
+
+		if (stoi(BeEilutesLuzio(tempeilute)) == IDkomandos)
+			getline(fd, tempeilute, '|');
+		else
+		{
+			fr << stoi(BeEilutesLuzio(tempeilute)) << '|';
+
+			getline(fd, tempeilute, '|');
+			fr << tempeilute << "|\n";
+		}
+	}
+
+	fd.close();
+	fr.close();
+
+	remove("Treneriai.txt");
+	rename("Treneriai2.txt", "Treneriai.txt");
+
+
+	fd.open("Zaidejai.txt");
+	fr.open("Zaidejai2.txt");
+	EiluciuSk("Zaidejai.txt", eilsk);
+
+	//pasalinami zaidejai
+	for (int i = 0; i < eilsk; i++)
+	{
+		getline(fd, tempeilute, '|');
+
+		if (stoi(BeEilutesLuzio(tempeilute)) == IDkomandos)
+		{
+			getline(fd, tempeilute, '|');
+			
+			zaidsk = stoi(BeEilutesLuzio(tempeilute));
+
+			for (int j = 0; j < zaidsk; j++)
+			{
+				int eilkom;
+				EiluciuSk("Komentarai.txt", eilkom);
+
+				ifstream fd2("Komentarai.txt");
+				ofstream fr2("Komentarai2.txt");
+
+				getline(fd, tempeilute, '|');
+
+				for (int k = 0; k < eilkom; k++)
+				{
+					getline(fd2, tempeilute2, '|');
+					if (BeEilutesLuzio(tempeilute2) == BeTarpu(tempeilute).ToUTF8())
+						getline(fd2, tempeilute2, '|');
+					else if (BeEilutesLuzio(tempeilute2) != BeTarpu(tempeilute).ToUTF8())
+					{
+						fr2 << BeEilutesLuzio(tempeilute2) << '|';
+
+						getline(fd2, tempeilute2, '|');
+
+						fr2 << BeEilutesLuzio(tempeilute2) << "|\n";
+					}
+				}
+				fr2.close();
+				fd2.close();
+
+				remove("Komentarai.txt");
+				rename("Komentarai2.txt", "Komentarai.txt");
+			}
+		}
+		else
+		{
+			fr << BeEilutesLuzio(tempeilute) << '|';
+
+			getline(fd, tempeilute, '|');
+			zaidsk = stoi(BeEilutesLuzio(tempeilute));
+			fr << zaidsk << '|';
+
+			for (int i = 0; i < zaidsk; i++)
+			{
+				getline(fd, tempeilute, '|');
+
+				fr << tempeilute << '|';
+			}
+			fr << '\n';
+		}
+	}
+
+
+	fd.close();
+	fr.close();
+
+	remove("Zaidejai.txt");
+	rename("Zaidejai2.txt", "Zaidejai.txt");
 
 	m_Salinti->Enable(false);
 
@@ -2054,6 +2240,47 @@ void RedaguotiKomandas::OnRedaguotiKomandas(wxCommandEvent &evt)
 {
 	m_frameRedaguotiKomandas = new RedaguotiKomandas();
 	m_frameRedaguotiKomandas->Show(true);
+
+	evt.Skip();
+}
+void RedaguotiKomandas::OnRedaguotiClicked(wxCommandEvent &evt)
+{
+	int IDkomandos = KomanduID[m_komandaChoice->GetSelection()];
+	int eilsk;
+	wxString newPav = m_komandaCtrl->GetValue();
+	string tempeilute;
+	EiluciuSk("Komandos.txt", eilsk);
+
+	ifstream fd("Komandos.txt");
+	ofstream fr("Komandos2.txt");
+
+	for (int i = 0; i < eilsk; i++)
+	{
+		getline(fd, tempeilute, '|');
+
+		fr << stoi(BeEilutesLuzio(tempeilute)) << '|';
+
+		if (stoi(BeEilutesLuzio(tempeilute)) == IDkomandos)
+		{
+			getline(fd, tempeilute, '|');
+
+			fr << newPav.ToUTF8() << "|\n";
+		}
+		else
+		{
+			getline(fd, tempeilute, '|');
+
+			fr << tempeilute << "|\n";
+		}
+	}
+
+	fd.close();
+	fr.close();
+
+	remove("Komandos.txt");
+	rename("Komandos2.txt", "Komandos.txt");
+
+	m_Redaguoti->Enable(false);
 
 	evt.Skip();
 }
