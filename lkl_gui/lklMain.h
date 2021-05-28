@@ -2,6 +2,7 @@
 #include "wx/wx.h"
 #include <wx/simplebook.h>
 #include <wx/dataview.h>
+#include <wx/grid.h>
 #include <string>
 #include <vector>
 #include <fstream>
@@ -177,6 +178,7 @@ public:
 
 	void OnIterptiZaidejus(wxCommandEvent &evt);
 	void OnIterptiClicked(wxCommandEvent &evt);
+	void OnCtrlClicked(wxCommandEvent &evt);
 };
 class IterptiVarzybas : public wxFrame
 {
@@ -192,6 +194,11 @@ private:
 	wxBoxSizer *VarzybaZaidejai1;
 	wxBoxSizer *VarzybaZaidejai2;
 	wxBoxSizer *VarzybaSizerInfo;
+
+	wxBoxSizer *VarzybaLentele1;
+	wxBoxSizer *VarzybaLentele2;
+
+	wxBoxSizer *CtrlEil;
 
 	wxStaticText *m_mainText1;
 	wxStaticText *m_mainKomanda1;
@@ -226,7 +233,11 @@ private:
 	wxChoice *m_Zaidejai2Choice11;
 	wxChoice *m_Zaidejai2Choice12;
 
-	wxTextCtrl *m_IterptiCtrl;
+	wxGrid *Lentele1;
+	wxGrid *Lentele2;
+
+	wxTextCtrl *m_IterptiData;
+	wxTextCtrl *m_IterptiVieta;
 
 	wxButton *m_Iterpti;
 
@@ -279,6 +290,8 @@ private:
 	wxChoice *m_komandaChoice;
 
 	wxButton *m_Salinti;
+
+	int ind;
 
 public:
 	PasalintiKomandas();

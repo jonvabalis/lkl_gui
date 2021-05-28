@@ -133,7 +133,7 @@ lklMain::lklMain() : wxFrame(nullptr, wxID_ANY, L"Lietuvos krep\u0161inio lygos 
 	menuBar->Append(iterpimasMenu, wxT("&\u012eterpimas"));
 	menuBar->Append(redagavimasMenu, wxT("&Redagavimas"));
 	menuBar->Append(pasalinimasMenu, wxT("&Pa\u0161alinimas"));
-	menuBar->Append(helpMenu, wxT("&Pagalba"));
+	menuBar->Append(helpMenu, wxT("&Apie"));
 
 	//prikabinti menu
 	SetMenuBar(menuBar);
@@ -978,6 +978,22 @@ IterptiVarzybas::IterptiVarzybas() : wxFrame(nullptr, wxID_ANY, L"Var\u017eyb\u0
 	m_mainKomanda2 = new wxStaticText(this, -1, "2 komanda");
 
 	SetFont(wxFont(12, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
+	Lentele1 = new wxGrid(this, -1, wxDefaultPosition, wxSize(400, 300));
+	Lentele1->CreateGrid(12, 16);
+
+	Lentele2 = new wxGrid(this, -1, wxDefaultPosition, wxSize(400, 300));
+	Lentele2->CreateGrid(12, 16);
+
+
+	wxString Punktai[16] = { L"Minut\u0117s", "2PM", "2PA", "3PM", "3PA", "FTM", "FTA", "REB", "AS", "ST", "TO", "BS", "RBS", "PF", "RF", "PTS" };
+
+	for (int i = 0; i < 16; i++)
+	{
+		Lentele1->SetColLabelValue(i, Punktai[i]);
+		Lentele2->SetColLabelValue(i, Punktai[i]);
+	}
+	
+
 	m_komanda1Choice = new wxChoice(this, 10092, wxDefaultPosition, wxSize(400, 25));
 	m_komanda2Choice = new wxChoice(this, 10093, wxDefaultPosition, wxSize(400, 25));
 
@@ -1008,8 +1024,10 @@ IterptiVarzybas::IterptiVarzybas() : wxFrame(nullptr, wxID_ANY, L"Var\u017eyb\u0
 	m_Zaidejai2Choice12 = new wxChoice(this, 10924, wxDefaultPosition, wxSize(185, 25));
 
 	SetFont(wxFont(16, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL));
-	m_IterptiCtrl = new wxTextCtrl(this, 10090);
-	m_IterptiCtrl->SetHint(L"pvz.: Kauno \u201e\u017dalgiris\u201c");
+	m_IterptiData = new wxTextCtrl(this, 10090);
+	m_IterptiData->SetHint("Data, pvz.: 2020-06-09");
+	m_IterptiVieta = new wxTextCtrl(this, 10099);
+	m_IterptiVieta->SetHint(L"Vieta, pvz.: \u017dalgirio arena");
 	m_Iterpti = new wxButton(this, 10091, L"\u012eterpti");
 
 
@@ -1034,10 +1052,13 @@ IterptiVarzybas::IterptiVarzybas() : wxFrame(nullptr, wxID_ANY, L"Var\u017eyb\u0
 	VarzybaKomanda = new wxBoxSizer(wxVERTICAL);
 	VarzybaKomanda1 = new wxBoxSizer(wxHORIZONTAL);
 	VarzybaKomanda2 = new wxBoxSizer(wxHORIZONTAL);
-	VarzybaZaidejai = new wxBoxSizer(wxHORIZONTAL);
+	VarzybaZaidejai = new wxBoxSizer(wxVERTICAL);
 	VarzybaZaidejai1 = new wxBoxSizer(wxVERTICAL);
+	VarzybaLentele1 = new wxBoxSizer(wxHORIZONTAL);
 	VarzybaZaidejai2 = new wxBoxSizer(wxVERTICAL);
+	VarzybaLentele2 = new wxBoxSizer(wxHORIZONTAL);
 	VarzybaSizerInfo = new wxBoxSizer(wxVERTICAL);
+	CtrlEil = new wxBoxSizer(wxHORIZONTAL);
 
 
 	VarzybaSizerText->Add(m_mainText1, 0, wxALIGN_CENTRE_HORIZONTAL);
@@ -1082,23 +1103,27 @@ IterptiVarzybas::IterptiVarzybas() : wxFrame(nullptr, wxID_ANY, L"Var\u017eyb\u0
 	VarzybaZaidejai2->Add(m_Zaidejai2Choice11, 0, wxLEFT, 30);
 	VarzybaZaidejai2->Add(m_Zaidejai2Choice12, 0, wxLEFT, 30);
 
-	VarzybaZaidejai->Add(VarzybaZaidejai1, 0, wxEXPAND | wxBOTTOM, 20);
-	VarzybaZaidejai->Add(VarzybaZaidejai2, 0, wxEXPAND | wxALL, 0);
+	VarzybaLentele1->Add(VarzybaZaidejai1, 0);
+	VarzybaLentele1->Add(Lentele1, 1);
+
+	VarzybaLentele2->Add(VarzybaZaidejai2, 0);
+	VarzybaLentele2->Add(Lentele2, 1);
+
+	VarzybaZaidejai->Add(VarzybaLentele1, 0, wxEXPAND | wxBOTTOM, 20);
+	VarzybaZaidejai->Add(VarzybaLentele2, 0, wxEXPAND | wxALL, 0);
 
 	VarzybaSizerInfo->Add(VarzybaZaidejai, 0, wxEXPAND | wxRIGHT);
 
 
-
-
-	//VarzybaSizerText->Add(m_mainText1, 0, wxALIGN_CENTRE_HORIZONTAL);
-	//VarzybaSizerInfo->Add(VarzybaSizerText, 0, wxEXPAND | wxBOTTOM, 69);
-	VarzybaSizerInfo->Add(m_IterptiCtrl, 0, wxEXPAND | wxALL, 30);
+	CtrlEil->Add(m_IterptiData, 1, wxEXPAND | wxALL, 30);
+	CtrlEil->Add(m_IterptiVieta, 1, wxEXPAND | wxALL, 30);
+	VarzybaSizerInfo->Add(CtrlEil, 0, wxEXPAND | wxLEFT, 0);
 	VarzybaSizerInfo->Add(m_Iterpti, 0, wxEXPAND | wxLEFT, 0);
 
 	VarzybaSizer->Add(VarzybaSizerInfo, 1, wxEXPAND | wxALL, 30);
 	this->SetSizer(VarzybaSizer);
 
-	m_IterptiCtrl->Connect(10091, wxEVT_BUTTON, wxCommandEventHandler(IterptiVarzybas::OnIterptiClicked), nullptr, this);
+	m_Iterpti->Connect(10091, wxEVT_BUTTON, wxCommandEventHandler(IterptiVarzybas::OnIterptiClicked), nullptr, this);
 }
 
 PasalintiKomandas::PasalintiKomandas() : wxFrame(nullptr, wxID_ANY, L"Komand\u0173 pa\u0161alinimas", wxPoint(30, 160), wxSize(800, 480))
@@ -1155,6 +1180,8 @@ PasalintiKomandas::PasalintiKomandas() : wxFrame(nullptr, wxID_ANY, L"Komand\u01
 
 		KomanduID.push_back(VisosKomandos[i].getID());
 	}
+
+	ind = Komanda.getPavadinimasSize();
 
 	m_Salinti->Connect(10101, wxEVT_BUTTON, wxCommandEventHandler(PasalintiKomandas::OnPasalintiClicked), nullptr, this);
 }
@@ -1621,7 +1648,7 @@ void lklMain::OnAbout(wxCommandEvent& event)
 {
 	wxString msg;
 
-	msg.Printf(wxT("Lietuvos krep\u0161inio lygos informacin\u0117 sistema para\u0161yta naudojant C++ ir %s"),
+	msg.Printf(wxT("Lietuvos krep\u0161inio lygos informacin\u0117 sistema\nProgramos autorius: Motiejus Tamonis P-9/3R\nSukurta naudojant C++ ir %s"),
 		wxVERSION_STRING);
 
 	wxMessageBox(msg, wxT("Apie program\u0105"),
@@ -1763,6 +1790,15 @@ void IterptiZaidejus::OnIterptiClicked(wxCommandEvent &evt)
 
 	m_Iterpti->Enable(false);
 
+	m_IterptiCtrl->Connect(10080, wxEVT_LEFT_DOWN, wxCommandEventHandler(IterptiZaidejus::OnCtrlClicked), nullptr, this);
+
+	evt.Skip();
+}
+void IterptiZaidejus::OnCtrlClicked(wxCommandEvent &evt)
+{
+	m_IterptiCtrl->Clear();
+
+	m_Iterpti->Enable(true);
 
 	evt.Skip();
 }
@@ -1825,6 +1861,88 @@ void IterptiVarzybas::OnIterptiVarzybas(wxCommandEvent &evt)
 }
 void IterptiVarzybas::OnIterptiClicked(wxCommandEvent &evt)
 {
+	int vID;
+	EiluciuSk("VarzybuDatos.txt", vID);
+	wxString data, vieta, komanda1, komanda2;
+
+	wxString ZaidVardai1[12] = { m_Zaidejai1Choice1->GetString(m_Zaidejai1Choice1->GetSelection()), m_Zaidejai1Choice2->GetString(m_Zaidejai1Choice2->GetSelection()),
+		m_Zaidejai1Choice3->GetString(m_Zaidejai1Choice3->GetSelection()), m_Zaidejai1Choice4->GetString(m_Zaidejai1Choice4->GetSelection()),
+		m_Zaidejai1Choice5->GetString(m_Zaidejai1Choice5->GetSelection()), m_Zaidejai1Choice6->GetString(m_Zaidejai1Choice6->GetSelection()),
+		m_Zaidejai1Choice7->GetString(m_Zaidejai1Choice7->GetSelection()), m_Zaidejai1Choice8->GetString(m_Zaidejai1Choice8->GetSelection()),
+		m_Zaidejai1Choice9->GetString(m_Zaidejai1Choice9->GetSelection()), m_Zaidejai1Choice10->GetString(m_Zaidejai1Choice10->GetSelection()),
+		m_Zaidejai1Choice11->GetString(m_Zaidejai1Choice11->GetSelection()), m_Zaidejai1Choice12->GetString(m_Zaidejai1Choice12->GetSelection()) };
+
+	wxString ZaidVardai2[12] = { m_Zaidejai2Choice1->GetString(m_Zaidejai2Choice1->GetSelection()), m_Zaidejai2Choice2->GetString(m_Zaidejai2Choice2->GetSelection()),
+		m_Zaidejai2Choice3->GetString(m_Zaidejai2Choice3->GetSelection()), m_Zaidejai2Choice4->GetString(m_Zaidejai2Choice4->GetSelection()),
+		m_Zaidejai2Choice5->GetString(m_Zaidejai2Choice5->GetSelection()), m_Zaidejai2Choice6->GetString(m_Zaidejai2Choice6->GetSelection()),
+		m_Zaidejai2Choice7->GetString(m_Zaidejai2Choice7->GetSelection()), m_Zaidejai2Choice8->GetString(m_Zaidejai2Choice8->GetSelection()),
+		m_Zaidejai2Choice9->GetString(m_Zaidejai2Choice9->GetSelection()), m_Zaidejai2Choice10->GetString(m_Zaidejai2Choice10->GetSelection()),
+		m_Zaidejai2Choice11->GetString(m_Zaidejai2Choice11->GetSelection()), m_Zaidejai2Choice12->GetString(m_Zaidejai2Choice12->GetSelection()) };
+	
+	data = m_IterptiData->GetValue();
+	vieta = m_IterptiVieta->GetValue();
+
+	komanda1 = m_komanda1Choice->GetString(m_komanda1Choice->GetSelection());
+	komanda2 = m_komanda2Choice->GetString(m_komanda2Choice->GetSelection());
+
+
+	ofstream fr("VarzybuDatos.txt", ios::app);
+	fr << vID << '|' << data.ToUTF8() << "|\n";
+	fr.close();
+
+	fr.open("VarzybuVietos.txt", ios::app);
+	fr << vID << '|' << vieta.ToUTF8() << "|\n";
+	fr.close();
+
+	fr.open("VarzybuKomandos.txt", ios::app);
+	fr << vID << '|' << komanda1.ToUTF8() << '|' << komanda2.ToUTF8() << "|\n";
+	fr.close();
+
+
+	fr.open("VarzybuRezultatai.txt", ios::app);
+
+	for (int i = 0; i < 12; i++)
+	{
+		fr << vID << '|' << BeTarpu(komanda1).ToUTF8() << '|' << ZaidVardai1[i].ToUTF8() << '|';
+		for (int j = 0; j < 16; j++)
+		{
+			if (Lentele1->GetCellValue(i, j).IsEmpty())
+			{
+				if (j == 0)
+					fr << "0:00|";
+				else
+					fr << "0|";
+			}
+			else
+				fr << Lentele1->GetCellValue(i, j) << '|';
+		}
+
+		fr << '\n';
+	}
+
+	for (int i = 0; i < 12; i++)
+	{
+		fr << vID << '|' << BeTarpu(komanda2).ToUTF8() << '|' << ZaidVardai2[i].ToUTF8() << '|';
+		for (int j = 0; j < 16; j++)
+		{
+			if (Lentele2->GetCellValue(i, j).IsEmpty())
+			{
+				if (j == 0)
+					fr << "0:00|";
+				else
+					fr << "0|";
+			}
+			else
+				fr << Lentele2->GetCellValue(i, j) << '|';
+		}
+
+		fr << '\n';
+	}
+
+	fr.close();
+
+	m_Iterpti->Enable(false);
+
 	evt.Skip();
 }
 void IterptiVarzybas::OnKomanda1Choice(wxCommandEvent &evt)
@@ -1947,130 +2065,134 @@ void PasalintiKomandas::OnPasalintiClicked(wxCommandEvent &evt)
 	int eilsk, zaidsk;
 	string tempeilute, tempeilute2;
 	EiluciuSk("Komandos.txt", eilsk);
-	
-	ifstream fd("Komandos.txt");
-	ofstream fr("Komandos2.txt");
 
-	//pasalinama komanda
-	for (int i = 0; i < eilsk; i++)
+
+	if(ind - 1 == m_komandaChoice->GetSelection())
 	{
-		getline(fd, tempeilute, '|');
+		ifstream fd("Komandos.txt");
+		ofstream fr("Komandos2.txt");
 
-		if (stoi(BeEilutesLuzio(tempeilute)) == IDkomandos)
-			getline(fd, tempeilute, '|');
-		else
-		{
-			fr << stoi(BeEilutesLuzio(tempeilute)) << '|';
-
-			getline(fd, tempeilute, '|');
-			fr << tempeilute << "|\n";
-		}
-	}
-
-	fd.close();
-	fr.close();
-
-	remove("Komandos.txt");
-	rename("Komandos2.txt", "Komandos.txt");
-
-
-	fd.open("Treneriai.txt");
-	fr.open("Treneriai2.txt");
-	EiluciuSk("Treneriai.txt", eilsk);
-
-	//pasalinamas treneris
-	for (int i = 0; i < eilsk; i++)
-	{
-		getline(fd, tempeilute, '|');
-
-		if (stoi(BeEilutesLuzio(tempeilute)) == IDkomandos)
-			getline(fd, tempeilute, '|');
-		else
-		{
-			fr << stoi(BeEilutesLuzio(tempeilute)) << '|';
-
-			getline(fd, tempeilute, '|');
-			fr << tempeilute << "|\n";
-		}
-	}
-
-	fd.close();
-	fr.close();
-
-	remove("Treneriai.txt");
-	rename("Treneriai2.txt", "Treneriai.txt");
-
-
-	fd.open("Zaidejai.txt");
-	fr.open("Zaidejai2.txt");
-	EiluciuSk("Zaidejai.txt", eilsk);
-
-	//pasalinami zaidejai
-	for (int i = 0; i < eilsk; i++)
-	{
-		getline(fd, tempeilute, '|');
-
-		if (stoi(BeEilutesLuzio(tempeilute)) == IDkomandos)
+		//pasalinama komanda
+		for (int i = 0; i < eilsk; i++)
 		{
 			getline(fd, tempeilute, '|');
-			
-			zaidsk = stoi(BeEilutesLuzio(tempeilute));
 
-			for (int j = 0; j < zaidsk; j++)
+			if (stoi(BeEilutesLuzio(tempeilute)) == IDkomandos)
+				getline(fd, tempeilute, '|');
+			else
 			{
-				int eilkom;
-				EiluciuSk("Komentarai.txt", eilkom);
-
-				ifstream fd2("Komentarai.txt");
-				ofstream fr2("Komentarai2.txt");
+				fr << stoi(BeEilutesLuzio(tempeilute)) << '|';
 
 				getline(fd, tempeilute, '|');
+				fr << tempeilute << "|\n";
+			}
+		}
 
-				for (int k = 0; k < eilkom; k++)
+		fd.close();
+		fr.close();
+
+		remove("Komandos.txt");
+		rename("Komandos2.txt", "Komandos.txt");
+
+
+		fd.open("Treneriai.txt");
+		fr.open("Treneriai2.txt");
+		EiluciuSk("Treneriai.txt", eilsk);
+
+		//pasalinamas treneris
+		for (int i = 0; i < eilsk; i++)
+		{
+			getline(fd, tempeilute, '|');
+
+			if (stoi(BeEilutesLuzio(tempeilute)) == IDkomandos)
+				getline(fd, tempeilute, '|');
+			else
+			{
+				fr << stoi(BeEilutesLuzio(tempeilute)) << '|';
+
+				getline(fd, tempeilute, '|');
+				fr << tempeilute << "|\n";
+			}
+		}
+
+		fd.close();
+		fr.close();
+
+		remove("Treneriai.txt");
+		rename("Treneriai2.txt", "Treneriai.txt");
+
+
+		fd.open("Zaidejai.txt");
+		fr.open("Zaidejai2.txt");
+		EiluciuSk("Zaidejai.txt", eilsk);
+
+		//pasalinami zaidejai
+		for (int i = 0; i < eilsk; i++)
+		{
+			getline(fd, tempeilute, '|');
+
+			if (stoi(BeEilutesLuzio(tempeilute)) == IDkomandos)
+			{
+				getline(fd, tempeilute, '|');
+
+				zaidsk = stoi(BeEilutesLuzio(tempeilute));
+
+				for (int j = 0; j < zaidsk; j++)
 				{
-					getline(fd2, tempeilute2, '|');
-					if (BeEilutesLuzio(tempeilute2) == BeTarpu(tempeilute).ToUTF8())
-						getline(fd2, tempeilute2, '|');
-					else if (BeEilutesLuzio(tempeilute2) != BeTarpu(tempeilute).ToUTF8())
+					int eilkom;
+					EiluciuSk("Komentarai.txt", eilkom);
+
+					ifstream fd2("Komentarai.txt");
+					ofstream fr2("Komentarai2.txt");
+
+					getline(fd, tempeilute, '|');
+
+					for (int k = 0; k < eilkom; k++)
 					{
-						fr2 << BeEilutesLuzio(tempeilute2) << '|';
-
 						getline(fd2, tempeilute2, '|');
+						if (BeEilutesLuzio(tempeilute2) == BeTarpu(tempeilute).ToUTF8())
+							getline(fd2, tempeilute2, '|');
+						else if (BeEilutesLuzio(tempeilute2) != BeTarpu(tempeilute).ToUTF8())
+						{
+							fr2 << BeEilutesLuzio(tempeilute2) << '|';
 
-						fr2 << BeEilutesLuzio(tempeilute2) << "|\n";
+							getline(fd2, tempeilute2, '|');
+
+							fr2 << BeEilutesLuzio(tempeilute2) << "|\n";
+						}
 					}
+					fr2.close();
+					fd2.close();
+
+					remove("Komentarai.txt");
+					rename("Komentarai2.txt", "Komentarai.txt");
 				}
-				fr2.close();
-				fd2.close();
-
-				remove("Komentarai.txt");
-				rename("Komentarai2.txt", "Komentarai.txt");
 			}
-		}
-		else
-		{
-			fr << BeEilutesLuzio(tempeilute) << '|';
-
-			getline(fd, tempeilute, '|');
-			zaidsk = stoi(BeEilutesLuzio(tempeilute));
-			fr << zaidsk << '|';
-
-			for (int i = 0; i < zaidsk; i++)
+			else
 			{
-				getline(fd, tempeilute, '|');
+				fr << BeEilutesLuzio(tempeilute) << '|';
 
-				fr << tempeilute << '|';
+				getline(fd, tempeilute, '|');
+				zaidsk = stoi(BeEilutesLuzio(tempeilute));
+				fr << zaidsk << '|';
+
+				for (int i = 0; i < zaidsk; i++)
+				{
+					getline(fd, tempeilute, '|');
+
+					fr << tempeilute << '|';
+				}
+				fr << '\n';
 			}
-			fr << '\n';
 		}
+
+		fd.close();
+		fr.close();
+
+		remove("Zaidejai.txt");
+		rename("Zaidejai2.txt", "Zaidejai.txt");
 	}
 
-
-	fd.close();
-	fr.close();
-
-	remove("Zaidejai.txt");
-	rename("Zaidejai2.txt", "Zaidejai.txt");
 
 	m_Salinti->Enable(false);
 
