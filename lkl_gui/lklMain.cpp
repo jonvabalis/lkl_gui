@@ -6,8 +6,6 @@
 
 
 
-
-
 wxBEGIN_EVENT_TABLE(lklMain, wxFrame)
 	EVT_MENU(wxID_ABOUT, OnAbout)
 	EVT_MENU(wxID_EXIT, OnQuit)
@@ -17,10 +15,6 @@ wxBEGIN_EVENT_TABLE(lklMain, wxFrame)
 	EVT_RADIOBUTTON(10021, OnRadioClicked)
 wxEND_EVENT_TABLE()
 
-//EVT_BUTTON(10001, OnButton1Clicked)
-//EVT_LISTBOX(10004, OnButton2Clicked)
-//EVT_BUTTON(10002, OnButton2Clicked)
-//EVT_BUTTON(10001, OnButton1Clicked)
 
 
 int KomandaListID;
@@ -235,10 +229,10 @@ ZaidKomentaras::ZaidKomentaras() : wxFrame(nullptr, wxID_ANY, L"Komentaras apie 
 	SetBackgroundColour(wxColour(99, 255, 140));
 
 
-	wxString temp = L"\u017Daid\u0117jo ID: ";
+	/*wxString temp = L"\u017Daid\u0117jo ID: ";
 	wxString temp2 = ", o komandos ID: ";
 	temp << ZaidejoListID << temp2 << KomandaID;
-	wxStaticText *m_txt = new wxStaticText(this, -1, temp);
+	wxStaticText *m_txt = new wxStaticText(this, -1, temp);*/
 
 
 	SkaitytiKomandos Komanda;
@@ -412,8 +406,6 @@ ZaidKomentaras::ZaidKomentaras() : wxFrame(nullptr, wxID_ANY, L"Komentaras apie 
 
 	for (int i = 0; i < Varzyba.getPavadinimasSize(); i++)
 	{
-		//int zind = Ind_varzybose(VisosKomandos, KomandaID, ZaidejoListID, VisosVarzybos, i);
-
 		if (VisosKomandos[KomandaID].getPavadinimas() == VisosVarzybos[i].getPavadinimas1())
 		{
 			char minutes[2], sekundes[2];
@@ -1544,9 +1536,9 @@ void lklMain::OnButton1Clicked(wxCommandEvent &evt)
 	{
 		ZaidejoListID = m_titulinisList->GetSelection();
 
-		wxString temp = "GetSelection() returns: ";
+		/*wxString temp = "GetSelection() returns: ";
 		temp << ZaidejoListID;
-		wxStaticText *m_txt = new wxStaticText(this, -1, temp);
+		wxStaticText *m_txt = new wxStaticText(this, -1, temp);*/
 		//m_titulinisList->AppendString(temp);
 	}
 	else if (m_radioVarzybos->GetValue() == true)
@@ -1555,9 +1547,9 @@ void lklMain::OnButton1Clicked(wxCommandEvent &evt)
 		VarzybaID = VarzybuID[VarzybaListID];
 		VarzybaInfo = m_titulinisList->GetString(VarzybaListID);
 
-		wxString temp = "GetString() var\u017eyboms returns: ";
+		/*wxString temp = "GetString() var\u017eyboms returns: ";
 		temp << VarzybaID << ", " << VarzybaInfo;
-		wxStaticText *m_txt = new wxStaticText(this, -1, temp);
+		wxStaticText *m_txt = new wxStaticText(this, -1, temp);*/
 	}
 
 	evt.Skip();

@@ -1,6 +1,5 @@
 #pragma once
 #include "wx/wx.h"
-#include <wx/simplebook.h>
 #include <wx/dataview.h>
 #include <wx/grid.h>
 #include <string>
@@ -466,7 +465,6 @@ public:
 		return this->ID[i];
 	};
 };
-
 class Komandos
 {
 private:
@@ -517,6 +515,7 @@ public:
 		this->Pavadinimas = pav;
 	}
 };
+
 class SkaitytiVarzybos
 {
 private:
